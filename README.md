@@ -1,6 +1,6 @@
 # fetchbook.org
 
-fetchbook.org is where we share our `fastfetch` outputs. `fastfetch` is a CLI tool that displays system information. Its repository is located at [fastfetch-cli/fastfetch](https://github.com/fastfetch-cli/fastfetch).
+[fetchbook.org](https://fetchbook.org) is where we share our `fastfetch` outputs. `fastfetch` is a CLI tool that displays system information. Its repository is located at [fastfetch-cli/fastfetch](https://github.com/fastfetch-cli/fastfetch).
 
 ## Local Development
 
