@@ -1008,6 +1008,26 @@ app.get("/user/:username", async (c) => {
 		results = res.results;
 	}
 
+	if (!isOwner && results.length === 0) {
+		return c.html(
+			<Layout title="Not Found" user={user}>
+				<div
+					style={{
+						textAlign: "center",
+						marginTop: "4rem",
+						marginBottom: "4rem",
+					}}
+				>
+					<h2>404 - User Not Found</h2>
+					<p style={{ color: "#666" }}>
+						This user does not exist or has no public devices.
+					</p>
+				</div>
+			</Layout>,
+			404,
+		);
+	}
+
 	const origin = new URL(c.req.url).origin;
 	let cliToken = "";
 	if (isOwner) {
