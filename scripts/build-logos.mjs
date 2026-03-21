@@ -96,37 +96,31 @@ function generateLogos() {
 
 		const rawText = fs.readFileSync(path.join(LOGO_DIR, file), "utf-8");
 
-		// Replace $<num> placeholders with color spans if we have colors
+		// Replace $<num> placeholders with color spans.
+		// Fastfetch colors are defined as $1, $2, etc., and they apply cross-line until the next token.
+		let currentIdx = 0;
 		const htmlLines = rawText.split("\n").map((line) => {
-			let r = line;
-			// replace html entities
-			r = r.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-			// Replace $<num> with span colors. It's stateful across lines in fastfetch but we'll do a simple per-token replacement.
-			// Fastfetch colors are defined as $1, $2, etc., and they apply to the end of the string or until the next color code.
-			// E.g. $1hello $2world
+			let r = line
+				.replace(/&/g, "&amp;")
+				.replace(/</g, "&lt;")
+				.replace(/>/g, "&gt;");
 			const parts = r.split(/(\$[0-9])/);
 			let out = "";
-			const _currentColorIndex = 0; // default 1 index, 0 in array
 
 			for (let i = 0; i < parts.length; i++) {
 				if (parts[i].match(/^\$[0-9]$/)) {
-					const idx = parseInt(parts[i].charAt(1), 10) - 1;
-					const color = config.colors[idx] || config.colors[0] || "#d4d4d4";
-					out += `<span style="color: ${color}">`;
+					// Update stateful color index
+					currentIdx = parseInt(parts[i].charAt(1), 10) - 1;
 				} else if (parts[i]) {
-					// If there were matches but the very first part isn't a color code, and we are at start
-					if (i === 0 && config.colors[0])
-						out += `<span style="color: ${config.colors[0]}">`;
-					out += parts[i];
-					if (i === 0 && config.colors[0]) out += "</span>";
-					else if (i > 0) out += "</span>";
+					// Validate Fastfetch native escape: $$ translates to a single $
+					const mappedText = parts[i].replaceAll("$$", "$");
+					// Wrap the text completely in the current inherited color
+					const color =
+						config.colors[currentIdx] || config.colors[0] || "#d4d4d4";
+					out += `<span style="color: ${color}">${mappedText}</span>`;
 				}
 			}
-			return (
-				out ||
-				`<span style="color: ${config.colors[0] || "#d4d4d4"}">${r}</span>`
-			);
+			return out;
 		});
 
 		for (const name of config.names) {
