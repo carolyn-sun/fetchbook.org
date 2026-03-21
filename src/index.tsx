@@ -592,9 +592,9 @@ app.get("/", async (c) => {
 	const recentRes = await c.env.DB.prepare(
 		"SELECT username FROM devices WHERE is_public = 1 GROUP BY username ORDER BY MAX(created_at) DESC LIMIT 30",
 	).all();
-	const recentUsers = (recentRes.results || [])
-		.map((r: any) => String(r.username))
-		.sort((a, b) => a.localeCompare(b));
+	const recentUsers = (recentRes.results || []).map((r: any) =>
+		String(r.username),
+	);
 
 	const _origin = new URL(c.req.url).origin;
 
