@@ -1043,7 +1043,7 @@ app.get("/user/:username", async (c) => {
 						border: "1px solid #ddd",
 						color: "#666",
 						width: "100%",
-						maxWidth: "350px",
+						maxWidth: "500px",
 						fontSize: "0.9rem",
 						padding: "8px",
 						borderRadius: "4px",
