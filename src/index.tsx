@@ -997,10 +997,8 @@ app.get("/user/:username", async (c) => {
 				}}
 			>
 				<strong style={{ color: "#333", fontSize: "0.95rem" }}>Share</strong>
-				<input
+				<div
 					id="share-link"
-					type="text"
-					readOnly
 					style={{
 						margin: 0,
 						background: "#f9f9f9",
@@ -1012,8 +1010,10 @@ app.get("/user/:username", async (c) => {
 						fontSize: "0.9rem",
 						padding: "8px",
 						borderRadius: "4px",
+						whiteSpace: "pre-wrap",
+						wordBreak: "break-all",
 					}}
-				/>
+				></div>
 				<button
 					type="button"
 					id="copy-btn"
@@ -1036,9 +1036,9 @@ app.get("/user/:username", async (c) => {
 					dangerouslySetInnerHTML={{
 						__html: `
           const linkInput = document.getElementById('share-link');
-          linkInput.value = window.location.href;
+          linkInput.innerText = window.location.href;
           document.getElementById('copy-btn').addEventListener('click', function() {
-            navigator.clipboard.writeText(linkInput.value);
+            navigator.clipboard.writeText(linkInput.innerText);
             const old = this.innerText;
             this.innerText = 'Copied';
             setTimeout(() => this.innerText = old, 1500);
