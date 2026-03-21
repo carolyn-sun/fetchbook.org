@@ -58,7 +58,8 @@ const Layout = (props: {
 			<title>{props.title} - fetchbook.org</title>
 			<style>{`
         html { background-color: #fff; }
-        body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; background-color: #fff; min-height: 100vh; box-sizing: border-box; }
+        body { margin: 0; padding: 0; background-color: transparent; }
+        #root { font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; background-color: #fff; min-height: 100vh; box-sizing: border-box; }
         h1 { margin-top: 0; }
         textarea, input, select { width: 100%; box-sizing: border-box; padding: 0.5rem; margin-bottom: 1rem; }
         button { font-family: inherit; font-size: 1rem; background: #000; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px;}
@@ -70,7 +71,7 @@ const Layout = (props: {
         }
         @media (prefers-color-scheme: dark) {
           html { background-color: #000; }
-          body { filter: invert(1) hue-rotate(180deg); }
+          #root { filter: invert(1) hue-rotate(180deg); }
           .terminal-block, img, video, iframe { filter: invert(1) hue-rotate(180deg); }
         }
       `}</style>
@@ -96,111 +97,113 @@ const Layout = (props: {
 			/>
 		</head>
 		<body>
-			<div
-				style={{
-					display: "flex",
-					justifyContent: "space-between",
-					alignItems: "center",
-					flexWrap: "wrap",
-					gap: "1rem",
-					borderBottom: "1px solid #eee",
-					paddingBottom: "1rem",
-					marginBottom: "2rem",
-				}}
-			>
-				<h1 style={{ margin: 0 }}>
-					<a href="/" style={{ textDecoration: "none", color: "inherit" }}>
-						fetchbook.org
-					</a>
-				</h1>
+			<div id="root">
 				<div
 					style={{
 						display: "flex",
+						justifyContent: "space-between",
 						alignItems: "center",
 						flexWrap: "wrap",
-						gap: "10px",
+						gap: "1rem",
+						borderBottom: "1px solid #eee",
+						paddingBottom: "1rem",
+						marginBottom: "2rem",
 					}}
 				>
-					{props.user ? (
-						<span
-							style={{
-								fontSize: "0.9rem",
-								color: "#666",
-								display: "flex",
-								alignItems: "center",
-								flexWrap: "wrap",
-								gap: "10px",
-							}}
-						>
-							<a
-								href={`/user/${props.user.username}`}
+					<h1 style={{ margin: 0 }}>
+						<a href="/" style={{ textDecoration: "none", color: "inherit" }}>
+							fetchbook.org
+						</a>
+					</h1>
+					<div
+						style={{
+							display: "flex",
+							alignItems: "center",
+							flexWrap: "wrap",
+							gap: "10px",
+						}}
+					>
+						{props.user ? (
+							<span
 								style={{
-									background: "#eee",
-									color: "#333",
+									fontSize: "0.9rem",
+									color: "#666",
+									display: "flex",
+									alignItems: "center",
+									flexWrap: "wrap",
+									gap: "10px",
+								}}
+							>
+								<a
+									href={`/user/${props.user.username}`}
+									style={{
+										background: "#eee",
+										color: "#333",
+										textDecoration: "none",
+										padding: "6px 12px",
+										borderRadius: "6px",
+										fontWeight: "bold",
+									}}
+								>
+									my fetchbook
+								</a>
+								<span>
+									Logged in as <strong>{props.user.username}</strong> |{" "}
+									<a
+										href="/auth/logout"
+										style={{ color: "#666", textDecoration: "underline" }}
+									>
+										Logout
+									</a>
+								</span>
+							</span>
+						) : (
+							<a
+								href="/auth/github/login"
+								style={{
+									background: "#24292e",
+									color: "#fff",
 									textDecoration: "none",
-									padding: "6px 12px",
+									padding: "8px 16px",
 									borderRadius: "6px",
+									fontSize: "0.9rem",
 									fontWeight: "bold",
 								}}
 							>
-								my fetchbook
+								Login with GitHub
 							</a>
-							<span>
-								Logged in as <strong>{props.user.username}</strong> |{" "}
-								<a
-									href="/auth/logout"
-									style={{ color: "#666", textDecoration: "underline" }}
-								>
-									Logout
-								</a>
-							</span>
-						</span>
-					) : (
-						<a
-							href="/auth/github/login"
-							style={{
-								background: "#24292e",
-								color: "#fff",
-								textDecoration: "none",
-								padding: "8px 16px",
-								borderRadius: "6px",
-								fontSize: "0.9rem",
-								fontWeight: "bold",
-							}}
-						>
-							Login with GitHub
-						</a>
-					)}
+						)}
+					</div>
 				</div>
+				{props.children}
+				<footer
+					style={{
+						marginTop: "4rem",
+						paddingTop: "2rem",
+						borderTop: "1px solid #eee",
+						color: "#888",
+						fontSize: "0.85rem",
+						textAlign: "center",
+					}}
+				>
+					fetchbook.org ·{" "}
+					<a
+						href="https://github.com/carolyn-sun/fetchbook.org"
+						target="_blank"
+						style={{ color: "#888", textDecoration: "underline" }}
+						rel="noopener"
+					>
+						carolyn-sun/fetchbook.org
+					</a>{" "}
+					·{" "}
+					<a
+						href="/privacy"
+						style={{ color: "#888", textDecoration: "underline" }}
+					>
+						Privacy & Data Rights
+					</a>
+				</footer>
 			</div>
-			{props.children}
-			<footer
-				style={{
-					marginTop: "4rem",
-					paddingTop: "2rem",
-					borderTop: "1px solid #eee",
-					color: "#888",
-					fontSize: "0.85rem",
-					textAlign: "center",
-				}}
-			>
-				fetchbook.org ·{" "}
-				<a
-					href="https://github.com/carolyn-sun/fetchbook.org"
-					target="_blank"
-					style={{ color: "#888", textDecoration: "underline" }}
-					rel="noopener"
-				>
-					carolyn-sun/fetchbook.org
-				</a>{" "}
-				·{" "}
-				<a
-					href="/privacy"
-					style={{ color: "#888", textDecoration: "underline" }}
-				>
-					Privacy & Data Rights
-				</a>
-			</footer>
 		</body>
 	</html>
 );
