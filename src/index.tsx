@@ -519,6 +519,7 @@ const FastfetchRenderer = ({
 				style={{
 					padding: "1.5rem",
 					display: "flex",
+					alignItems: "center",
 					gap: "2.5rem",
 					overflowX: "auto",
 					fontSize: "14px",
