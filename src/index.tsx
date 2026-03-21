@@ -44,10 +44,21 @@ const Layout = (props: {
 		<head>
 			<meta charset="utf-8" />
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+			<meta name="color-scheme" content="light dark" />
+			<meta
+				name="theme-color"
+				content="#ffffff"
+				media="(prefers-color-scheme: light)"
+			/>
+			<meta
+				name="theme-color"
+				content="#000000"
+				media="(prefers-color-scheme: dark)"
+			/>
 			<title>{props.title} - fetchbook.org</title>
 			<style>{`
         html { background-color: #fff; }
-        body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; }
+        body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; background-color: #fff; min-height: 100vh; box-sizing: border-box; }
         h1 { margin-top: 0; }
         textarea, input, select { width: 100%; box-sizing: border-box; padding: 0.5rem; margin-bottom: 1rem; }
         button { font-family: inherit; font-size: 1rem; background: #000; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px;}
@@ -58,7 +69,8 @@ const Layout = (props: {
           .hide-on-mobile { display: none !important; }
         }
         @media (prefers-color-scheme: dark) {
-          html { filter: invert(1) hue-rotate(180deg); }
+          html { background-color: #000; }
+          body { filter: invert(1) hue-rotate(180deg); }
           .terminal-block, img, video, iframe { filter: invert(1) hue-rotate(180deg); }
         }
       `}</style>
