@@ -1071,9 +1071,8 @@ app.get("/user/:username", async (c) => {
 							</div>
 							<button
 								type="button"
-								class="copy-token-btn"
+								class="copy-token-btn primary-btn"
 								data-cmd={cliCommand}
-								class="primary-btn"
 							>
 								Copy
 							</button>
@@ -1125,9 +1124,8 @@ app.get("/user/:username", async (c) => {
 							</div>
 							<button
 								type="button"
-								class="copy-token-btn"
+								class="copy-token-btn primary-btn"
 								data-cmd={psCommand}
-								class="primary-btn"
 							>
 								Copy
 							</button>
