@@ -13,7 +13,8 @@
 			"scripts/**/*.mjs",
 			"package.json",
 			"tsconfig.json"
-		]
+		],
+		"maxSize": 2097152
 	},
 	"formatter": {
 		"enabled": true,

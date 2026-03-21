@@ -16,6 +16,15 @@ type Variables = {
 
 const app = new Hono<{ Bindings: Bindings; Variables: Variables }>();
 
+app.onError((err, c) => {
+	console.error(`[Error] ${c.req.method} ${c.req.url} - ${err.message}`, err);
+	return c.text(`Internal Server Error: ${err.message}`, 500);
+});
+
+app.notFound((c) => {
+	return c.text("404 Not Found", 404);
+});
+
 app.use("*", async (c, next) => {
 	const token = getCookie(c, "auth_token");
 	if (token && c.env.JWT_SECRET) {

@@ -100,7 +100,7 @@ function generateLogos() {
 		// Fastfetch colors are defined as $1, $2, etc., and they apply cross-line until the next token.
 		let currentIdx = 0;
 		const htmlLines = rawText.split("\n").map((line) => {
-			let r = line
+			const r = line
 				.replace(/&/g, "&amp;")
 				.replace(/</g, "&lt;")
 				.replace(/>/g, "&gt;");
@@ -133,7 +133,7 @@ function generateLogos() {
 export const LOGOS: Record<string, string> = ${JSON.stringify(resultData, null, 2)};
 
 export const getLogoForOS = (os?: string) => {
-  if (!os) return LOGOS['debian'] || '';
+  if (!os) return LOGOS.debian || '';
   const lower = os.toLowerCase();
   
   if (LOGOS[lower]) return LOGOS[lower];
@@ -143,7 +143,7 @@ export const getLogoForOS = (os?: string) => {
   for (const key of sortedKeys) {
     if (lower.includes(key)) return LOGOS[key];
   }
-  return LOGOS['debian'] || '';
+  return LOGOS.debian || '';
 };
 `;
 
