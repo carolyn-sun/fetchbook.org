@@ -365,6 +365,9 @@ const formatFastfetchResult = (
 		return result
 			.map((d: any) => {
 				const mp = d.mountpoint || d.name || "/";
+				// On Unix/macOS, only show the root disk `/` to avoid partition clutter
+				// Windows drives (e.g., `C:\`) don't start with `/` and will pass through
+				if (mp.startsWith("/") && mp !== "/") return null;
 				const suffix = ` (${mp})`;
 				const bytes = d.bytes || d;
 				let perc = 0;
