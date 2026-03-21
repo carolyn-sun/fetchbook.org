@@ -174,6 +174,15 @@ const Layout = (props: {
 			>
 				fetchbook.org ·{" "}
 				<a
+					href="https://github.com/carolyn-sun/fetchbook.org"
+					target="_blank"
+					style={{ color: "#888", textDecoration: "underline" }}
+					rel="noopener"
+				>
+					carolyn-sun/fetchbook.org
+				</a>{" "}
+				·{" "}
+				<a
 					href="/privacy"
 					style={{ color: "#888", textDecoration: "underline" }}
 				>
