@@ -1,483 +1,500 @@
 [
-	{
-		"type": "Title",
-		"result": {
-			"userId": 501,
-			"userName": "carolyn",
-			"fullUserName": "Carolyn Sun",
-			"hostName": "mac-m4pro-metal.local",
-			"homeDir": "/Users/carolyn/",
-			"exePath": "/opt/homebrew/Cellar/fastfetch/2.60.0/bin/fastfetch",
-			"userShell": "/bin/zsh",
-			"pid": 99205,
-			"cwd": "/Users/carolyn/Sources/fetchbook.org/"
-		}
-	},
-	{
-		"type": "Separator",
-		"error": "Unsupported for JSON format"
-	},
-	{
-		"type": "OS",
-		"result": {
-			"buildID": "25D2128",
-			"codename": "Tahoe",
-			"id": "macos",
-			"idLike": "",
-			"name": "macOS",
-			"prettyName": "macOS Tahoe 26.3.1 (25D2128)",
-			"variant": "",
-			"variantID": "",
-			"version": "26.3.1",
-			"versionID": "26.3.1"
-		}
-	},
-	{
-		"type": "Host",
-		"result": {
-			"family": "Mac16,11",
-			"name": "Mac Mini (2024)",
-			"version": "",
-			"sku": "",
-			"vendor": "Apple Inc.",
-			"serial": "NV9WYH5QXX",
-			"uuid": "2E4DDFF4-0E79-5E91-96CC-FA2F60D02675"
-		}
-	},
-	{
-		"type": "Kernel",
-		"result": {
-			"architecture": "arm64",
-			"name": "Darwin",
-			"release": "25.3.0",
-			"version": "Darwin Kernel Version 25.3.0: Wed Jan 28 20:51:28 PST 2026; root:xnu-12377.91.3~2/RELEASE_ARM64_T6041",
-			"pageSize": 16384
-		}
-	},
-	{
-		"type": "Uptime",
-		"result": {
-			"uptime": 82052699,
-			"bootTime": "2026-03-20T22:15:38.219+0800"
-		}
-	},
-	{
-		"type": "Packages",
-		"result": {
-			"all": 204,
-			"amSystem": 0,
-			"amUser": 0,
-			"apk": 0,
-			"brew": 169,
-			"brewCask": 35,
-			"choco": 0,
-			"dpkg": 0,
-			"emerge": 0,
-			"eopkg": 0,
-			"flatpakSystem": 0,
-			"flatpakUser": 0,
-			"guixSystem": 0,
-			"guixUser": 0,
-			"guixHome": 0,
-			"hpkgSystem": 0,
-			"hpkgUser": 0,
-			"kiss": 0,
-			"linglong": 0,
-			"macports": 0,
-			"mport": 0,
-			"moss": 0,
-			"nixDefault": 0,
-			"nixSystem": 0,
-			"nixUser": 0,
-			"opkg": 0,
-			"pacman": 0,
-			"pacstall": 0,
-			"paludis": 0,
-			"pisi": 0,
-			"pkg": 0,
-			"pkgtool": 0,
-			"pkgsrc": 0,
-			"rpm": 0,
-			"scoopUser": 0,
-			"scoopGlobal": 0,
-			"snap": 0,
-			"soar": 0,
-			"sorcery": 0,
-			"winget": 0,
-			"xbps": 0,
-			"pacmanBranch": ""
-		}
-	},
-	{
-		"type": "Shell",
-		"result": {
-			"exe": "/bin/zsh",
-			"exeName": "zsh",
-			"exePath": "/bin/zsh",
-			"pid": 88311,
-			"ppid": 88310,
-			"processName": "zsh",
-			"prettyName": "zsh",
-			"version": "5.9",
-			"tty": 10
-		}
-	},
-	{
-		"type": "Display",
-		"result": [
-			{
-				"id": 2,
-				"name": "BenQ MA270U",
-				"primary": true,
-				"output": {
-					"width": 3840,
-					"height": 2160,
-					"refreshRate": 60.0,
-					"drrStatus": null
-				},
-				"scaled": {
-					"width": 1920,
-					"height": 1080
-				},
-				"preferred": {
-					"width": 3840,
-					"height": 2160,
-					"refreshRate": 60.0
-				},
-				"physical": {
-					"width": 600,
-					"height": 340
-				},
-				"rotation": 0,
-				"bitDepth": 10,
-				"hdrStatus": "Supported",
-				"type": "External",
-				"manufactureDate": {
-					"year": 2025,
-					"week": 3
-				},
-				"serial": 16843009,
-				"platformApi": "CoreGraphics"
-			}
-		]
-	},
-	{
-		"type": "DE",
-		"error": "No DE found"
-	},
-	{
-		"type": "WM",
-		"result": {
-			"processName": "WindowServer",
-			"prettyName": "Quartz Compositor",
-			"protocolName": "",
-			"pluginName": "",
-			"version": "1.600.0"
-		}
-	},
-	{
-		"type": "WMTheme",
-		"result": "Multicolor (Light)"
-	},
-	{
-		"type": "Theme",
-		"result": {
-			"theme1": "Liquid Glass",
-			"theme2": ""
-		}
-	},
-	{
-		"type": "Icons",
-		"error": "Not supported on this platform"
-	},
-	{
-		"type": "Font",
-		"result": {
-			"display": ".AppleSystemUIFont [System], Helvetica [User]",
-			"fonts": [
-				".AppleSystemUIFont",
-				"Helvetica",
-				".AppleSystemUIFontMonospaced",
-				"Menlo"
-			]
-		}
-	},
-	{
-		"type": "Cursor",
-		"result": {
-			"theme": "Fill - Black, Outline - White",
-			"size": "32"
-		}
-	},
-	{
-		"type": "Terminal",
-		"result": {
-			"processName": "ghostty",
-			"exe": "/Applications/Ghostty.app/Contents/MacOS/ghostty",
-			"exeName": "ghostty",
-			"exePath": "/Applications/Ghostty.app/Contents/MacOS/ghostty",
-			"pid": 1352,
-			"ppid": 1,
-			"prettyName": "ghostty",
-			"version": "1.3.1",
-			"tty": ""
-		}
-	},
-	{
-		"type": "TerminalFont",
-		"result": {
-			"font": {
-				"name": "JetBrainsMono Nerd Font",
-				"size": "16",
-				"styles": [],
-				"pretty": "JetBrainsMono Nerd Font (16pt)"
-			},
-			"fallback": {
-				"name": "",
-				"size": "",
-				"styles": [],
-				"pretty": ""
-			}
-		}
-	},
-	{
-		"type": "CPU",
-		"result": {
-			"cpu": "Apple M4 Pro",
-			"vendor": "Apple",
-			"packages": 1,
-			"cores": {
-				"physical": 14,
-				"logical": 14,
-				"online": 14
-			},
-			"frequency": {
-				"base": 0,
-				"max": 4512
-			},
-			"coreTypes": [],
-			"temperature": null,
-			"march": "ARMv9.3-A",
-			"numaNodes": null
-		}
-	},
-	{
-		"type": "GPU",
-		"result": [
-			{
-				"index": 0,
-				"coreCount": 20,
-				"coreUsage": 0.0,
-				"memory": {
-					"dedicated": {
-						"total": null,
-						"used": null
-					},
-					"shared": {
-						"total": 40200896512,
-						"used": 674676736
-					},
-					"type": null
-				},
-				"driver": "com.apple.AGXG16X 345.20.4",
-				"name": "Apple M4 Pro",
-				"temperature": null,
-				"type": "Integrated",
-				"vendor": "Apple",
-				"platformApi": "Metal 4",
-				"frequency": 1578,
-				"deviceId": 4294968358
-			}
-		]
-	},
-	{
-		"type": "Memory",
-		"result": {
-			"total": 51539607552,
-			"used": 28012249088
-		}
-	},
-	{
-		"type": "Swap",
-		"result": [
-			{
-				"name": "Encrypted",
-				"used": 0,
-				"total": 0
-			}
-		]
-	},
-	{
-		"type": "Disk",
-		"result": [
-			{
-				"bytes": {
-					"available": 405762981888,
-					"free": 405762981888,
-					"total": 994662584320,
-					"used": 588899602432
-				},
-				"files": {
-					"total": 3962984128,
-					"used": 455008
-				},
-				"filesystem": "apfs",
-				"mountpoint": "/",
-				"mountFrom": "/dev/disk3s1s1",
-				"name": "Macintosh HD",
-				"volumeType": ["Regular", "Read-only"],
-				"createTime": "2026-02-25T11:41:32.000+0800"
-			},
-			{
-				"bytes": {
-					"available": 405762981888,
-					"free": 405762981888,
-					"total": 994662584320,
-					"used": 588899602432
-				},
-				"files": {
-					"total": 3964955544,
-					"used": 2426424
-				},
-				"filesystem": "apfs",
-				"mountpoint": "/System/Volumes/Data",
-				"mountFrom": "/dev/disk3s5",
-				"name": "Data",
-				"volumeType": ["Hidden"],
-				"createTime": "2024-12-07T17:22:23.635+0800"
-			},
-			{
-				"bytes": {
-					"available": 506363904,
-					"free": 506363904,
-					"total": 524288000,
-					"used": 17924096
-				},
-				"files": {
-					"total": 4945040,
-					"used": 80
-				},
-				"filesystem": "apfs",
-				"mountpoint": "/System/Volumes/Hardware",
-				"mountFrom": "/dev/disk1s3",
-				"name": "Hardware",
-				"volumeType": ["Hidden"],
-				"createTime": "2025-02-04T21:30:24.787+0800"
-			},
-			{
-				"bytes": {
-					"available": 405776474112,
-					"free": 405776474112,
-					"total": 994662584320,
-					"used": 588886110208
-				},
-				"files": {
-					"total": 3962662416,
-					"used": 1536
-				},
-				"filesystem": "apfs",
-				"mountpoint": "/System/Volumes/Preboot",
-				"mountFrom": "/dev/disk3s2",
-				"name": "Preboot",
-				"volumeType": ["Hidden"],
-				"createTime": "2025-02-04T21:30:23.625+0800"
-			},
-			{
-				"bytes": {
-					"available": 405827174400,
-					"free": 405827174400,
-					"total": 994662584320,
-					"used": 588835409920
-				},
-				"files": {
-					"total": 3963156094,
-					"used": 94
-				},
-				"filesystem": "apfs",
-				"mountpoint": "/System/Volumes/Update",
-				"mountFrom": "/dev/disk3s4",
-				"name": "Update",
-				"volumeType": ["Hidden"],
-				"createTime": "2025-02-04T21:30:25.670+0800"
-			},
-			{
-				"bytes": {
-					"available": 405827174400,
-					"free": 405827174400,
-					"total": 994662584320,
-					"used": 588835409920
-				},
-				"files": {
-					"total": 3963156000,
-					"used": 0
-				},
-				"filesystem": "apfs",
-				"mountpoint": "/System/Volumes/VM",
-				"mountFrom": "/dev/disk3s6",
-				"name": "VM",
-				"volumeType": ["Hidden"],
-				"createTime": "2025-02-04T21:42:24.489+0800"
-			},
-			{
-				"bytes": {
-					"available": 506363904,
-					"free": 506363904,
-					"total": 524288000,
-					"used": 17924096
-				},
-				"files": {
-					"total": 4944992,
-					"used": 32
-				},
-				"filesystem": "apfs",
-				"mountpoint": "/System/Volumes/iSCPreboot",
-				"mountFrom": "/dev/disk1s1",
-				"name": "iSCPreboot",
-				"volumeType": ["Hidden"],
-				"createTime": "2025-02-04T21:30:24.415+0800"
-			},
-			{
-				"bytes": {
-					"available": 506363904,
-					"free": 506363904,
-					"total": 524288000,
-					"used": 17924096
-				},
-				"files": {
-					"total": 4944961,
-					"used": 1
-				},
-				"filesystem": "apfs",
-				"mountpoint": "/System/Volumes/xarts",
-				"mountFrom": "/dev/disk1s2",
-				"name": "xarts",
-				"volumeType": ["Hidden"],
-				"createTime": "2025-02-04T21:30:24.583+0800"
-			}
-		]
-	},
-	{
-		"type": "LocalIp",
-		"result": []
-	},
-	{
-		"type": "Battery",
-		"result": []
-	},
-	{
-		"type": "PowerAdapter",
-		"result": []
-	},
-	{
-		"type": "Locale",
-		"result": "en_US.UTF-8"
-	},
-	{
-		"type": "Break",
-		"error": "Unsupported for JSON format"
-	},
-	{
-		"type": "Colors",
-		"error": "Unsupported for JSON format"
-	}
+  {
+    "type": "Title",
+    "result": {
+      "userId": 501,
+      "userName": "carolyn",
+      "fullUserName": "Carolyn Sun",
+      "hostName": "mac-m4pro-metal.local",
+      "homeDir": "/Users/carolyn/",
+      "exePath": "/opt/homebrew/Cellar/fastfetch/2.60.0/bin/fastfetch",
+      "userShell": "/bin/zsh",
+      "pid": 14369,
+      "cwd": "/Users/carolyn/Sources/fetchbook.org/"
+    }
+  },
+  {
+    "type": "Separator",
+    "error": "Unsupported for JSON format"
+  },
+  {
+    "type": "OS",
+    "result": {
+      "buildID": "25D2128",
+      "codename": "Tahoe",
+      "id": "macos",
+      "idLike": "",
+      "name": "macOS",
+      "prettyName": "macOS Tahoe 26.3.1 (25D2128)",
+      "variant": "",
+      "variantID": "",
+      "version": "26.3.1",
+      "versionID": "26.3.1"
+    }
+  },
+  {
+    "type": "Host",
+    "result": {
+      "family": "Mac16,11",
+      "name": "Mac Mini (2024)",
+      "version": "",
+      "sku": "",
+      "vendor": "Apple Inc.",
+      "serial": "NV9WYH5QXX",
+      "uuid": "2E4DDFF4-0E79-5E91-96CC-FA2F60D02675"
+    }
+  },
+  {
+    "type": "Kernel",
+    "result": {
+      "architecture": "arm64",
+      "name": "Darwin",
+      "release": "25.3.0",
+      "version": "Darwin Kernel Version 25.3.0: Wed Jan 28 20:51:28 PST 2026; root:xnu-12377.91.3~2/RELEASE_ARM64_T6041",
+      "pageSize": 16384
+    }
+  },
+  {
+    "type": "Uptime",
+    "result": {
+      "uptime": 89201840,
+      "bootTime": "2026-03-20T22:15:38.219+0800"
+    }
+  },
+  {
+    "type": "Packages",
+    "result": {
+      "all": 204,
+      "amSystem": 0,
+      "amUser": 0,
+      "apk": 0,
+      "brew": 169,
+      "brewCask": 35,
+      "choco": 0,
+      "dpkg": 0,
+      "emerge": 0,
+      "eopkg": 0,
+      "flatpakSystem": 0,
+      "flatpakUser": 0,
+      "guixSystem": 0,
+      "guixUser": 0,
+      "guixHome": 0,
+      "hpkgSystem": 0,
+      "hpkgUser": 0,
+      "kiss": 0,
+      "linglong": 0,
+      "macports": 0,
+      "mport": 0,
+      "moss": 0,
+      "nixDefault": 0,
+      "nixSystem": 0,
+      "nixUser": 0,
+      "opkg": 0,
+      "pacman": 0,
+      "pacstall": 0,
+      "paludis": 0,
+      "pisi": 0,
+      "pkg": 0,
+      "pkgtool": 0,
+      "pkgsrc": 0,
+      "rpm": 0,
+      "scoopUser": 0,
+      "scoopGlobal": 0,
+      "snap": 0,
+      "soar": 0,
+      "sorcery": 0,
+      "winget": 0,
+      "xbps": 0,
+      "pacmanBranch": ""
+    }
+  },
+  {
+    "type": "Shell",
+    "result": {
+      "exe": "/bin/zsh",
+      "exeName": "zsh",
+      "exePath": "/bin/zsh",
+      "pid": 88311,
+      "ppid": 88310,
+      "processName": "zsh",
+      "prettyName": "zsh",
+      "version": "5.9",
+      "tty": 10
+    }
+  },
+  {
+    "type": "Display",
+    "result": [
+      {
+        "id": 2,
+        "name": "BenQ MA270U",
+        "primary": true,
+        "output": {
+          "width": 3840,
+          "height": 2160,
+          "refreshRate": 60.0,
+          "drrStatus": null
+        },
+        "scaled": {
+          "width": 1920,
+          "height": 1080
+        },
+        "preferred": {
+          "width": 3840,
+          "height": 2160,
+          "refreshRate": 60.0
+        },
+        "physical": {
+          "width": 600,
+          "height": 340
+        },
+        "rotation": 0,
+        "bitDepth": 10,
+        "hdrStatus": "Supported",
+        "type": "External",
+        "manufactureDate": {
+          "year": 2025,
+          "week": 3
+        },
+        "serial": 16843009,
+        "platformApi": "CoreGraphics"
+      }
+    ]
+  },
+  {
+    "type": "DE",
+    "error": "No DE found"
+  },
+  {
+    "type": "WM",
+    "result": {
+      "processName": "WindowServer",
+      "prettyName": "Quartz Compositor",
+      "protocolName": "",
+      "pluginName": "",
+      "version": "1.600.0"
+    }
+  },
+  {
+    "type": "WMTheme",
+    "result": "Multicolor (Light)"
+  },
+  {
+    "type": "Theme",
+    "result": {
+      "theme1": "Liquid Glass",
+      "theme2": ""
+    }
+  },
+  {
+    "type": "Icons",
+    "error": "Not supported on this platform"
+  },
+  {
+    "type": "Font",
+    "result": {
+      "display": ".AppleSystemUIFont [System], Helvetica [User]",
+      "fonts": [
+        ".AppleSystemUIFont",
+        "Helvetica",
+        ".AppleSystemUIFontMonospaced",
+        "Menlo"
+      ]
+    }
+  },
+  {
+    "type": "Cursor",
+    "result": {
+      "theme": "Fill - Black, Outline - White",
+      "size": "32"
+    }
+  },
+  {
+    "type": "Terminal",
+    "result": {
+      "processName": "ghostty",
+      "exe": "/Applications/Ghostty.app/Contents/MacOS/ghostty",
+      "exeName": "ghostty",
+      "exePath": "/Applications/Ghostty.app/Contents/MacOS/ghostty",
+      "pid": 1352,
+      "ppid": 1,
+      "prettyName": "ghostty",
+      "version": "1.3.1",
+      "tty": ""
+    }
+  },
+  {
+    "type": "TerminalFont",
+    "result": {
+      "font": {
+        "name": "JetBrainsMono Nerd Font",
+        "size": "16",
+        "styles": [],
+        "pretty": "JetBrainsMono Nerd Font (16pt)"
+      },
+      "fallback": {
+        "name": "",
+        "size": "",
+        "styles": [],
+        "pretty": ""
+      }
+    }
+  },
+  {
+    "type": "CPU",
+    "result": {
+      "cpu": "Apple M4 Pro",
+      "vendor": "Apple",
+      "packages": 1,
+      "cores": {
+        "physical": 14,
+        "logical": 14,
+        "online": 14
+      },
+      "frequency": {
+        "base": 0,
+        "max": 4512
+      },
+      "coreTypes": [],
+      "temperature": null,
+      "march": "ARMv9.3-A",
+      "numaNodes": null
+    }
+  },
+  {
+    "type": "GPU",
+    "result": [
+      {
+        "index": 0,
+        "coreCount": 20,
+        "coreUsage": 0.0,
+        "memory": {
+          "dedicated": {
+            "total": null,
+            "used": null
+          },
+          "shared": {
+            "total": 40200896512,
+            "used": 579469312
+          },
+          "type": null
+        },
+        "driver": "com.apple.AGXG16X 345.20.4",
+        "name": "Apple M4 Pro",
+        "temperature": null,
+        "type": "Integrated",
+        "vendor": "Apple",
+        "platformApi": "Metal 4",
+        "frequency": 1578,
+        "deviceId": 4294968358
+      }
+    ]
+  },
+  {
+    "type": "Memory",
+    "result": {
+      "total": 51539607552,
+      "used": 26820608000
+    }
+  },
+  {
+    "type": "Swap",
+    "result": [
+      {
+        "name": "Encrypted",
+        "used": 0,
+        "total": 0
+      }
+    ]
+  },
+  {
+    "type": "Disk",
+    "result": [
+      {
+        "bytes": {
+          "available": 405088051200,
+          "free": 405088051200,
+          "total": 994662584320,
+          "used": 589574533120
+        },
+        "files": {
+          "total": 3956393008,
+          "used": 455008
+        },
+        "filesystem": "apfs",
+        "mountpoint": "/",
+        "mountFrom": "/dev/disk3s1s1",
+        "name": "Macintosh HD",
+        "volumeType": [
+          "Regular",
+          "Read-only"
+        ],
+        "createTime": "2026-02-25T11:41:32.000+0800"
+      },
+      {
+        "bytes": {
+          "available": 405088059392,
+          "free": 405088059392,
+          "total": 994662584320,
+          "used": 589574524928
+        },
+        "files": {
+          "total": 3958372695,
+          "used": 2434615
+        },
+        "filesystem": "apfs",
+        "mountpoint": "/System/Volumes/Data",
+        "mountFrom": "/dev/disk3s5",
+        "name": "Data",
+        "volumeType": [
+          "Hidden"
+        ],
+        "createTime": "2024-12-07T17:22:23.635+0800"
+      },
+      {
+        "bytes": {
+          "available": 506347520,
+          "free": 506347520,
+          "total": 524288000,
+          "used": 17940480
+        },
+        "files": {
+          "total": 4944880,
+          "used": 80
+        },
+        "filesystem": "apfs",
+        "mountpoint": "/System/Volumes/Hardware",
+        "mountFrom": "/dev/disk1s3",
+        "name": "Hardware",
+        "volumeType": [
+          "Hidden"
+        ],
+        "createTime": "2025-02-04T21:30:24.787+0800"
+      },
+      {
+        "bytes": {
+          "available": 405088190464,
+          "free": 405088190464,
+          "total": 994662584320,
+          "used": 589574393856
+        },
+        "files": {
+          "total": 3955940896,
+          "used": 1536
+        },
+        "filesystem": "apfs",
+        "mountpoint": "/System/Volumes/Preboot",
+        "mountFrom": "/dev/disk3s2",
+        "name": "Preboot",
+        "volumeType": [
+          "Hidden"
+        ],
+        "createTime": "2025-02-04T21:30:23.625+0800"
+      },
+      {
+        "bytes": {
+          "available": 405102477312,
+          "free": 405102477312,
+          "total": 994662584320,
+          "used": 589560107008
+        },
+        "files": {
+          "total": 3956078974,
+          "used": 94
+        },
+        "filesystem": "apfs",
+        "mountpoint": "/System/Volumes/Update",
+        "mountFrom": "/dev/disk3s4",
+        "name": "Update",
+        "volumeType": [
+          "Hidden"
+        ],
+        "createTime": "2025-02-04T21:30:25.670+0800"
+      },
+      {
+        "bytes": {
+          "available": 405149958144,
+          "free": 405149958144,
+          "total": 994662584320,
+          "used": 589512626176
+        },
+        "files": {
+          "total": 3956542560,
+          "used": 0
+        },
+        "filesystem": "apfs",
+        "mountpoint": "/System/Volumes/VM",
+        "mountFrom": "/dev/disk3s6",
+        "name": "VM",
+        "volumeType": [
+          "Hidden"
+        ],
+        "createTime": "2025-02-04T21:42:24.489+0800"
+      },
+      {
+        "bytes": {
+          "available": 506347520,
+          "free": 506347520,
+          "total": 524288000,
+          "used": 17940480
+        },
+        "files": {
+          "total": 4944832,
+          "used": 32
+        },
+        "filesystem": "apfs",
+        "mountpoint": "/System/Volumes/iSCPreboot",
+        "mountFrom": "/dev/disk1s1",
+        "name": "iSCPreboot",
+        "volumeType": [
+          "Hidden"
+        ],
+        "createTime": "2025-02-04T21:30:24.415+0800"
+      },
+      {
+        "bytes": {
+          "available": 506347520,
+          "free": 506347520,
+          "total": 524288000,
+          "used": 17940480
+        },
+        "files": {
+          "total": 4944801,
+          "used": 1
+        },
+        "filesystem": "apfs",
+        "mountpoint": "/System/Volumes/xarts",
+        "mountFrom": "/dev/disk1s2",
+        "name": "xarts",
+        "volumeType": [
+          "Hidden"
+        ],
+        "createTime": "2025-02-04T21:30:24.583+0800"
+      }
+    ]
+  },
+  {
+    "type": "LocalIp",
+    "result": []
+  },
+  {
+    "type": "Battery",
+    "result": []
+  },
+  {
+    "type": "PowerAdapter",
+    "result": []
+  },
+  {
+    "type": "Locale",
+    "result": "en_US.UTF-8"
+  },
+  {
+    "type": "Break",
+    "error": "Unsupported for JSON format"
+  },
+  {
+    "type": "Colors",
+    "error": "Unsupported for JSON format"
+  }
 ]
