@@ -563,10 +563,13 @@ const FastfetchRenderer = ({
 
 app.get("/", async (c) => {
 	const user = c.get("user");
-	const { results } = await c.env.DB.prepare(
-		"SELECT DISTINCT username FROM devices WHERE is_public = 1 ORDER BY RANDOM() LIMIT 1",
+
+	const recentRes = await c.env.DB.prepare(
+		"SELECT username FROM devices WHERE is_public = 1 GROUP BY username ORDER BY MAX(created_at) DESC LIMIT 30",
 	).all();
-	const randomUser = results?.[0]?.username;
+	const recentUsers = (recentRes.results || [])
+		.map((r: any) => String(r.username))
+		.sort((a, b) => a.localeCompare(b));
 
 	const _origin = new URL(c.req.url).origin;
 
@@ -709,16 +712,16 @@ app.get("/", async (c) => {
 				</form>
 			</div>
 
-			{randomUser && (
+			{recentUsers.length > 0 && (
 				<div
 					style={{
 						textAlign: "center",
 						marginTop: "4rem",
-						marginBottom: "4rem",
+						marginBottom: "2rem",
 					}}
 				>
 					<a
-						href={`/user/${randomUser}`}
+						href="/random"
 						style={{
 							display: "inline-block",
 							background: "#1E1E1E",
@@ -733,6 +736,48 @@ app.get("/", async (c) => {
 					>
 						Explore a random fetchbook ✨
 					</a>
+				</div>
+			)}
+
+			{recentUsers.length > 0 && (
+				<div style={{ marginBottom: "4rem" }}>
+					<h3
+						style={{
+							textAlign: "center",
+							marginBottom: "1.5rem",
+							color: "#666",
+						}}
+					>
+						Recently Updated
+					</h3>
+					<div
+						style={{
+							display: "grid",
+							gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+							gap: "0.5rem 1rem",
+							maxWidth: "900px",
+							margin: "0 auto",
+							textAlign: "center",
+						}}
+					>
+						{recentUsers.map((u) => (
+							<a
+								key={u}
+								href={`/user/${u}`}
+								style={{
+									display: "block",
+									color: "#333",
+									textDecoration: "underline",
+									fontSize: "1rem",
+									whiteSpace: "nowrap",
+									overflow: "hidden",
+									textOverflow: "ellipsis",
+								}}
+							>
+								{u}
+							</a>
+						))}
+					</div>
 				</div>
 			)}
 		</Layout>,
@@ -837,6 +882,15 @@ app.post("/api/web-upload", async (c) => {
 	const body = await c.req.parseBody();
 	const username = body.username as string;
 	const isPublic = body.is_public === "1";
+
+	const user = c.get("user");
+	if (!user || user.username !== username) {
+		return c.text(
+			"Unauthorized: You can only upload to your own account.",
+			401,
+		);
+	}
+
 	let deviceInfo: any;
 	let rawObj: any = null;
 
@@ -878,12 +932,41 @@ app.post("/api/web-upload", async (c) => {
 	return c.redirect(`/user/${username}`);
 });
 
+app.get("/random", async (c) => {
+	const exclude = c.req.query("exclude");
+	let randomRes: any;
+	if (exclude) {
+		randomRes = await c.env.DB.prepare(
+			"SELECT DISTINCT username FROM devices WHERE is_public = 1 AND username != ? ORDER BY RANDOM() LIMIT 1",
+		)
+			.bind(exclude)
+			.all();
+	} else {
+		randomRes = await c.env.DB.prepare(
+			"SELECT DISTINCT username FROM devices WHERE is_public = 1 ORDER BY RANDOM() LIMIT 1",
+		).all();
+	}
+	const randomUser = randomRes.results?.[0]?.username;
+	if (randomUser) {
+		return c.redirect(`/user/${randomUser}`);
+	}
+	return c.redirect("/");
+});
+
 app.get("/user/:username", async (c) => {
 	const username = c.req.param("username");
 	const user = c.get("user");
 
 	let results: any[];
 	const isOwner = user && user.username === username;
+
+	const otherRes = await c.env.DB.prepare(
+		"SELECT username FROM devices WHERE is_public = 1 AND username != ? LIMIT 1",
+	)
+		.bind(username)
+		.all();
+	const hasOtherUsers = otherRes.results && otherRes.results.length > 0;
+
 	if (isOwner) {
 		const res = await c.env.DB.prepare(
 			"SELECT * FROM devices WHERE username = ? ORDER BY created_at DESC",
@@ -1177,6 +1260,32 @@ app.get("/user/:username", async (c) => {
 						</div>
 					</div>
 				))
+			)}
+			{hasOtherUsers && (
+				<div
+					style={{
+						textAlign: "center",
+						marginTop: "4rem",
+						marginBottom: "2rem",
+					}}
+				>
+					<a
+						href={`/random?exclude=${username}`}
+						style={{
+							display: "inline-block",
+							background: "#1E1E1E",
+							color: "#fff",
+							textDecoration: "none",
+							padding: "12px 24px",
+							borderRadius: "8px",
+							fontSize: "1.1rem",
+							fontWeight: "bold",
+							boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+						}}
+					>
+						Explore a random fetchbook ✨
+					</a>
+				</div>
 			)}
 		</Layout>,
 	);
