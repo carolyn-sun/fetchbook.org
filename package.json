@@ -1,20 +1,32 @@
 {
-  "name": "fetchbook.org",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "predev": "node scripts/build-logos.mjs",
-    "dev": "wrangler dev",
-    "prebuild": "node scripts/build-logos.mjs",
-    "deploy": "wrangler deploy",
-    "build": "tsc"
-  },
-  "dependencies": {
-    "hono": "^4.1.2"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240320.1",
-    "typescript": "^5.0.4",
-    "wrangler": "^4.76.0"
-  }
+	"name": "fetchbook.org",
+	"version": "1.0.0",
+	"private": true,
+	"scripts": {
+		"predev": "node scripts/build-logos.mjs",
+		"dev": "wrangler dev",
+		"prebuild": "node scripts/build-logos.mjs",
+		"deploy": "wrangler deploy",
+		"build": "tsc",
+		"lint": "biome check .",
+		"format": "biome format --write .",
+		"prepare": "husky"
+	},
+	"lint-staged": {
+		"*.{js,ts,tsx,jsx,json}": [
+			"biome check --write --no-errors-on-unmatched",
+			"biome format --write --no-errors-on-unmatched"
+		]
+	},
+	"dependencies": {
+		"hono": "^4.1.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.8",
+		"@cloudflare/workers-types": "^4.20240320.1",
+		"husky": "^9.1.7",
+		"lint-staged": "^16.4.0",
+		"typescript": "^5.0.4",
+		"wrangler": "^4.76.0"
+	}
 }
