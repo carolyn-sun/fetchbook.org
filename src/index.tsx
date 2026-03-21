@@ -65,15 +65,21 @@ const Layout = (props: {
 				media="(prefers-color-scheme: dark)"
 			/>
 			<title>{props.title} - fetchbook.org</title>
-			<style>{`
-        html { background-color: #fff; }
-        body { margin: 0; padding: 0; background-color: transparent; }
-        #root { font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; background-color: #fff; min-height: 100vh; box-sizing: border-box; }
+			<style
+				dangerouslySetInnerHTML={{
+					__html: `
+        body {
+          margin: 0; padding: 0; background-color: transparent;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Noto Sans Emoji", "Segoe UI Emoji";
+        }
+        #root { line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; background-color: #fff; min-height: 100vh; box-sizing: border-box; }
         h1 { margin-top: 0; }
         textarea, input, select { width: 100%; box-sizing: border-box; padding: 0.5rem; margin-bottom: 1rem; }
+        textarea { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; font-size: 0.95rem; }
         button { font-family: inherit; font-size: 1rem; background: #000; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px;}
         button:hover { background: #444; }
-        pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; }
+        code, pre, kbd { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
+        pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; font-size: 0.9rem; }
         .card { border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;}
         @media (max-width: 768px) {
           .hide-on-mobile { display: none !important; }
@@ -83,7 +89,9 @@ const Layout = (props: {
           #root { filter: invert(1) hue-rotate(180deg); }
           .terminal-block, img, video, iframe { filter: invert(1) hue-rotate(180deg); }
         }
-      `}</style>
+      `,
+				}}
+			/>
 			<script
 				dangerouslySetInnerHTML={{
 					__html: `
@@ -517,7 +525,7 @@ const FastfetchRenderer = ({
 				color: "#D4D4D4",
 				borderRadius: "8px",
 				fontFamily:
-					'"SF Mono", "Source Code Pro", Consolas, "Courier New", monospace',
+					'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 				overflow: "hidden",
 				maxWidth: "100%",
 				border: "1px solid #333",
@@ -1084,7 +1092,8 @@ app.get("/user/:username", async (c) => {
 								style={{
 									margin: 0,
 									flex: 1,
-									fontFamily: "monospace",
+									fontFamily:
+										'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 									fontSize: "0.85rem",
 									padding: "10px",
 									borderRadius: "4px",
@@ -1148,7 +1157,8 @@ app.get("/user/:username", async (c) => {
 								style={{
 									margin: 0,
 									flex: 1,
-									fontFamily: "monospace",
+									fontFamily:
+										'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 									fontSize: "0.85rem",
 									padding: "10px",
 									borderRadius: "4px",
@@ -1239,7 +1249,8 @@ app.get("/user/:username", async (c) => {
 						color: "#666",
 						width: "100%",
 						maxWidth: "350px",
-						fontFamily: "monospace",
+						fontFamily:
+							'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 						fontSize: "0.9rem",
 						padding: "8px",
 						borderRadius: "4px",
