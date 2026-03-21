@@ -13,7 +13,9 @@ CREATE TABLE devices (
   host_name TEXT GENERATED ALWAYS AS (json_extract(device_info, '$.Host')) STORED,
   
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  is_public BOOLEAN DEFAULT 0
+  is_public BOOLEAN DEFAULT 0,
+  note TEXT,
+  sort_order INTEGER DEFAULT 0
 );
 
 CREATE INDEX idx_devices_username ON devices(username);

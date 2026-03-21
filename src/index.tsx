@@ -985,14 +985,14 @@ app.get("/user/:username", async (c) => {
 
 	if (isOwner) {
 		const res = await c.env.DB.prepare(
-			"SELECT * FROM devices WHERE username = ? ORDER BY created_at DESC",
+			"SELECT * FROM devices WHERE username = ? ORDER BY sort_order DESC, created_at DESC",
 		)
 			.bind(username)
 			.all();
 		results = res.results;
 	} else {
 		const res = await c.env.DB.prepare(
-			"SELECT * FROM devices WHERE username = ? AND is_public = 1 ORDER BY created_at DESC",
+			"SELECT * FROM devices WHERE username = ? AND is_public = 1 ORDER BY sort_order DESC, created_at DESC",
 		)
 			.bind(username)
 			.all();
@@ -1261,9 +1261,55 @@ app.get("/user/:username", async (c) => {
 								display: "flex",
 								justifyContent: "space-between",
 								alignItems: "center",
+								flexWrap: "wrap",
+								gap: "12px",
 							}}
 						>
 							<div>
+								{isOwner ? (
+									<form
+										method="post"
+										action={`/api/device/${row.id}/edit`}
+										style={{ margin: "0 0 4px 0" }}
+										{...({ onsubmit: "event.preventDefault();" } as any)}
+									>
+										<input
+											type="text"
+											name="note"
+											value={row.note || ""}
+											placeholder="Add a note..."
+											title="Edit note"
+											maxLength={30}
+											{...({
+												onchange:
+													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams(new FormData(this.form)) }); this.blur();",
+											} as any)}
+											style={{
+												color: "#333",
+												fontSize: "1rem",
+												fontWeight: "bold",
+												background: "#fff",
+												border: "1px solid #ccc",
+												borderRadius: "4px",
+												padding: "4px 8px",
+												margin: 0,
+												fontFamily: "inherit",
+												width: "100%",
+												maxWidth: "250px",
+											}}
+										/>
+									</form>
+								) : row.note ? (
+									<h3
+										style={{
+											margin: "0 0 4px 0",
+											color: "#333",
+											fontSize: "1.1rem",
+										}}
+									>
+										{row.note}
+									</h3>
+								) : null}
 								<p style={{ margin: 0 }}>
 									<small>
 										<time
@@ -1299,12 +1345,63 @@ app.get("/user/:username", async (c) => {
 
 							{isOwner && (
 								<div
-									style={{ display: "flex", gap: "8px", alignItems: "center" }}
+									style={{
+										display: "flex",
+										gap: "8px",
+										alignItems: "center",
+										flexWrap: "wrap",
+									}}
 								>
+									<form
+										method="post"
+										action={`/api/device/${row.id}/edit`}
+										style={{ margin: 0, display: "flex", gap: "4px" }}
+										{...({ onsubmit: "event.preventDefault();" } as any)}
+									>
+										<button
+											type="button"
+											title="Move Up"
+											{...({
+												onclick:
+													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'up' }) }).then(() => { const c = this.closest('.card'); if (c.previousElementSibling) c.parentNode.insertBefore(c, c.previousElementSibling); });",
+											} as any)}
+											style={{
+												padding: "4px 8px",
+												fontSize: "0.8rem",
+												background: "#eee",
+												color: "#333",
+												border: "1px solid #ccc",
+												borderRadius: "4px",
+												cursor: "pointer",
+											}}
+										>
+											↑
+										</button>
+										<button
+											type="button"
+											title="Move Down"
+											{...({
+												onclick:
+													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'down' }) }).then(() => { const c = this.closest('.card'); if (c.nextElementSibling) c.parentNode.insertBefore(c.nextElementSibling, c); });",
+											} as any)}
+											style={{
+												padding: "4px 8px",
+												fontSize: "0.8rem",
+												background: "#eee",
+												color: "#333",
+												border: "1px solid #ccc",
+												borderRadius: "4px",
+												cursor: "pointer",
+											}}
+										>
+											↓
+										</button>
+									</form>
 									<form
 										method="post"
 										action={`/api/device/${row.id}/visibility`}
 										style={{ margin: 0 }}
+										{...({ onsubmit: "event.preventDefault();" } as any)}
 									>
 										<input
 											type="hidden"
@@ -1312,13 +1409,20 @@ app.get("/user/:username", async (c) => {
 											value={row.is_public ? "0" : "1"}
 										/>
 										<button
-											type="submit"
+											type="button"
+											{...({
+												onclick:
+													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams(new FormData(this.form)) }).then(() => window.location.reload());",
+											} as any)}
 											style={{
 												padding: "4px 8px",
 												fontSize: "0.8rem",
 												background: "#eee",
 												color: "#333",
 												border: "1px solid #ccc",
+												borderRadius: "4px",
+												cursor: "pointer",
+												whiteSpace: "nowrap",
 											}}
 										>
 											{row.is_public ? "Make Private" : "Make Public"}
@@ -1328,15 +1432,23 @@ app.get("/user/:username", async (c) => {
 										method="post"
 										action={`/api/device/${row.id}/delete`}
 										style={{ margin: 0 }}
+										{...({ onsubmit: "event.preventDefault();" } as any)}
 									>
 										<button
-											type="submit"
+											type="button"
+											{...({
+												onclick:
+													"if(confirm('Delete this device permanently?')) { fetch(this.form.action, { method: 'POST' }).then(() => this.closest('.card').remove()); }",
+											} as any)}
 											style={{
 												padding: "4px 8px",
 												fontSize: "0.8rem",
 												background: "#ff4444",
 												color: "#fff",
 												border: "1px solid #ff4444",
+												borderRadius: "4px",
+												cursor: "pointer",
+												whiteSpace: "nowrap",
 											}}
 										>
 											Delete
@@ -1401,6 +1513,34 @@ app.post("/api/device/:id/visibility", async (c) => {
 	)
 		.bind(isPublic, id, user.username)
 		.run();
+
+	return c.redirect(`/user/${user.username}`);
+});
+
+app.post("/api/device/:id/edit", async (c) => {
+	const id = c.req.param("id");
+	const user = c.get("user");
+	if (!user) return c.text("Unauthorized", 401);
+
+	const body = await c.req.parseBody();
+
+	if (body.note !== undefined) {
+		const note = body.note ? String(body.note).slice(0, 30) : null;
+		await c.env.DB.prepare(
+			"UPDATE devices SET note = ? WHERE id = ? AND username = ?",
+		)
+			.bind(note, id, user.username)
+			.run();
+	}
+
+	if (body.action === "up" || body.action === "down") {
+		const sortOrderOffset = body.action === "up" ? 1 : -1;
+		await c.env.DB.prepare(
+			"UPDATE devices SET sort_order = sort_order + ? WHERE id = ? AND username = ?",
+		)
+			.bind(sortOrderOffset, id, user.username)
+			.run();
+	}
 
 	return c.redirect(`/user/${user.username}`);
 });
