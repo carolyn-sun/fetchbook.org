@@ -990,6 +990,7 @@ app.get("/user/:username", async (c) => {
 					alignItems: "center",
 				}}
 			>
+				<strong style={{ color: "#333", fontSize: "0.95rem" }}>Share</strong>
 				<input
 					id="share-link"
 					type="text"

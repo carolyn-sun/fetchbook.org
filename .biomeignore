@@ -1,2 +1,4 @@
 src/logos.js
 src/logos.ts
+fastfetch/**
+fastfetch
