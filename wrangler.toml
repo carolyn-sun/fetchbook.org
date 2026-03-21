@@ -1,4 +1,4 @@
-name = "fetchbook"
+name = "fetchbook-org"
 main = "src/index.tsx"
 compatibility_date = "2024-03-20"
 
