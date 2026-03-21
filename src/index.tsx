@@ -65,20 +65,19 @@ const Layout = (props: {
 				media="(prefers-color-scheme: dark)"
 			/>
 			<title>{props.title} - fetchbook.org</title>
+			<link rel="stylesheet" href="/styles.css" />
 			<style
 				dangerouslySetInnerHTML={{
 					__html: `
         body {
           margin: 0; padding: 0; background-color: transparent;
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Noto Sans Emoji", "Segoe UI Emoji";
         }
         #root { line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; background-color: #fff; min-height: 100vh; box-sizing: border-box; }
         h1 { margin-top: 0; }
         textarea, input, select { width: 100%; box-sizing: border-box; padding: 0.5rem; margin-bottom: 1rem; }
-        textarea { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; font-size: 0.95rem; }
+        textarea { font-size: 0.95rem; }
         button { font-family: inherit; font-size: 1rem; background: #000; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px;}
         button:hover { background: #444; }
-        code, pre, kbd { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
         pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; font-size: 0.9rem; }
         .card { border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;}
         @media (max-width: 768px) {
@@ -151,17 +150,7 @@ const Layout = (props: {
 									gap: "10px",
 								}}
 							>
-								<a
-									href={`/user/${props.user.username}`}
-									style={{
-										background: "#eee",
-										color: "#333",
-										textDecoration: "none",
-										padding: "6px 12px",
-										borderRadius: "6px",
-										fontWeight: "bold",
-									}}
-								>
+								<a href={`/user/${props.user.username}`} class="secondary-btn">
 									my fetchbook
 								</a>
 								<span>
@@ -175,18 +164,7 @@ const Layout = (props: {
 								</span>
 							</span>
 						) : (
-							<a
-								href="/auth/github/login"
-								style={{
-									background: "#24292e",
-									color: "#fff",
-									textDecoration: "none",
-									padding: "8px 16px",
-									borderRadius: "6px",
-									fontSize: "0.9rem",
-									fontWeight: "bold",
-								}}
-							>
+							<a href="/auth/github/login" class="primary-btn">
 								Login with GitHub
 							</a>
 						)}
@@ -524,8 +502,6 @@ const FastfetchRenderer = ({
 				backgroundColor: "#1E1E1E",
 				color: "#D4D4D4",
 				borderRadius: "8px",
-				fontFamily:
-					'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 				overflow: "hidden",
 				maxWidth: "100%",
 				border: "1px solid #333",
@@ -713,18 +689,7 @@ app.get("/", async (c) => {
 							</label>
 
 							<br />
-							<button
-								type="submit"
-								style={{
-									background: "#000",
-									color: "#fff",
-									border: "none",
-									padding: "10px 20px",
-									borderRadius: "4px",
-									cursor: "pointer",
-									fontWeight: "bold",
-								}}
-							>
+							<button type="submit" class="primary-btn">
 								Publish to fetchbook
 							</button>
 						</>
@@ -753,20 +718,7 @@ app.get("/", async (c) => {
 						marginBottom: "2rem",
 					}}
 				>
-					<a
-						href="/random"
-						style={{
-							display: "inline-block",
-							background: "#1E1E1E",
-							color: "#fff",
-							textDecoration: "none",
-							padding: "12px 24px",
-							borderRadius: "8px",
-							fontSize: "1.1rem",
-							fontWeight: "bold",
-							boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-						}}
-					>
+					<a href="/random" class="primary-btn">
 						Explore a random fetchbook ✨
 					</a>
 				</div>
@@ -1089,11 +1041,10 @@ app.get("/user/:username", async (c) => {
 						</strong>
 						<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
 							<div
+								className="code-inline-box"
 								style={{
 									margin: 0,
 									flex: 1,
-									fontFamily:
-										'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 									fontSize: "0.85rem",
 									padding: "10px",
 									borderRadius: "4px",
@@ -1122,19 +1073,7 @@ app.get("/user/:username", async (c) => {
 								type="button"
 								class="copy-token-btn"
 								data-cmd={cliCommand}
-								style={{
-									margin: 0,
-									padding: "8px 0",
-									background: "#212529",
-									color: "#fff",
-									border: "none",
-									fontWeight: "bold",
-									borderRadius: "4px",
-									width: "90px",
-									textAlign: "center",
-									flexShrink: 0,
-									cursor: "pointer",
-								}}
+								class="primary-btn"
 							>
 								Copy
 							</button>
@@ -1154,11 +1093,10 @@ app.get("/user/:username", async (c) => {
 						</strong>
 						<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
 							<div
+								className="code-inline-box"
 								style={{
 									margin: 0,
 									flex: 1,
-									fontFamily:
-										'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 									fontSize: "0.85rem",
 									padding: "10px",
 									borderRadius: "4px",
@@ -1189,19 +1127,7 @@ app.get("/user/:username", async (c) => {
 								type="button"
 								class="copy-token-btn"
 								data-cmd={psCommand}
-								style={{
-									margin: 0,
-									padding: "8px 0",
-									background: "#212529",
-									color: "#fff",
-									border: "none",
-									fontWeight: "bold",
-									borderRadius: "4px",
-									width: "90px",
-									textAlign: "center",
-									flexShrink: 0,
-									cursor: "pointer",
-								}}
+								class="primary-btn"
 							>
 								Copy
 							</button>
@@ -1242,6 +1168,7 @@ app.get("/user/:username", async (c) => {
 				<strong style={{ color: "#333", fontSize: "0.95rem" }}>Share</strong>
 				<div
 					id="share-link"
+					class="share-link-box"
 					style={{
 						margin: 0,
 						background: "#f9f9f9",
@@ -1249,8 +1176,6 @@ app.get("/user/:username", async (c) => {
 						color: "#666",
 						width: "100%",
 						maxWidth: "350px",
-						fontFamily:
-							'ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace',
 						fontSize: "0.9rem",
 						padding: "8px",
 						borderRadius: "4px",
@@ -1258,22 +1183,7 @@ app.get("/user/:username", async (c) => {
 						wordBreak: "break-all",
 					}}
 				></div>
-				<button
-					type="button"
-					id="copy-btn"
-					style={{
-						margin: 0,
-						padding: "8px 0",
-						background: "#efefef",
-						color: "#333",
-						border: "1px solid #ccc",
-						fontWeight: "bold",
-						borderRadius: "4px",
-						flexShrink: 0,
-						width: "90px",
-						textAlign: "center",
-					}}
-				>
+				<button type="button" id="copy-btn" class="secondary-btn">
 					Copy
 				</button>
 				<script
@@ -1405,15 +1315,7 @@ app.get("/user/:username", async (c) => {
 												onclick:
 													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'up' }) }).then(() => { const c = this.closest('.card'); const p = c.previousElementSibling; if (p && p.classList.contains('card')) c.parentNode.insertBefore(c, p); });",
 											} as any)}
-											style={{
-												padding: "4px 8px",
-												fontSize: "0.8rem",
-												background: "#eee",
-												color: "#333",
-												border: "1px solid #ccc",
-												borderRadius: "4px",
-												cursor: "pointer",
-											}}
+											class="secondary-btn"
 										>
 											↑
 										</button>
@@ -1424,15 +1326,7 @@ app.get("/user/:username", async (c) => {
 												onclick:
 													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'down' }) }).then(() => { const c = this.closest('.card'); const n = c.nextElementSibling; if (n && n.classList.contains('card')) c.parentNode.insertBefore(n, c); });",
 											} as any)}
-											style={{
-												padding: "4px 8px",
-												fontSize: "0.8rem",
-												background: "#eee",
-												color: "#333",
-												border: "1px solid #ccc",
-												borderRadius: "4px",
-												cursor: "pointer",
-											}}
+											class="secondary-btn"
 										>
 											↓
 										</button>
@@ -1454,16 +1348,7 @@ app.get("/user/:username", async (c) => {
 												onclick:
 													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams(new FormData(this.form)) }).then(() => window.location.reload());",
 											} as any)}
-											style={{
-												padding: "4px 8px",
-												fontSize: "0.8rem",
-												background: "#eee",
-												color: "#333",
-												border: "1px solid #ccc",
-												borderRadius: "4px",
-												cursor: "pointer",
-												whiteSpace: "nowrap",
-											}}
+											class="secondary-btn"
 										>
 											{row.is_public ? "Make Private" : "Make Public"}
 										</button>
@@ -1480,16 +1365,7 @@ app.get("/user/:username", async (c) => {
 												onclick:
 													"if(confirm('Delete this device permanently?')) { fetch(this.form.action, { method: 'POST' }).then(() => this.closest('.card').remove()); }",
 											} as any)}
-											style={{
-												padding: "4px 8px",
-												fontSize: "0.8rem",
-												background: "#ff4444",
-												color: "#fff",
-												border: "1px solid #ff4444",
-												borderRadius: "4px",
-												cursor: "pointer",
-												whiteSpace: "nowrap",
-											}}
+											class="danger-btn"
 										>
 											Delete
 										</button>
@@ -1518,20 +1394,7 @@ app.get("/user/:username", async (c) => {
 						marginBottom: "2rem",
 					}}
 				>
-					<a
-						href={`/random?exclude=${username}`}
-						style={{
-							display: "inline-block",
-							background: "#1E1E1E",
-							color: "#fff",
-							textDecoration: "none",
-							padding: "12px 24px",
-							borderRadius: "8px",
-							fontSize: "1.1rem",
-							fontWeight: "bold",
-							boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-						}}
-					>
+					<a href={`/random?exclude=${username}`} class="primary-btn">
 						Explore a random fetchbook ✨
 					</a>
 				</div>

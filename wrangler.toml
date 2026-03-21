@@ -9,3 +9,6 @@ database_id = "12a9989b-1b21-4c09-a235-5136a93310a0"
 
 [vars]
 GITHUB_CLIENT_ID = "Ov23liXO9otdrecs5HaH"
+
+[assets]
+directory = "public"
