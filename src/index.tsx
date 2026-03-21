@@ -487,6 +487,8 @@ const FastfetchRenderer = ({
 						background: "transparent",
 						padding: 0,
 						fontFamily: "inherit",
+						lineHeight: 1.2,
+						flexShrink: 0,
 						textShadow: "0 0 5px rgba(255, 255, 255, 0.1)",
 					}}
 					dangerouslySetInnerHTML={{
