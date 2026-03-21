@@ -1,0 +1,55 @@
+# 需求
+
+## 基础设施
+
+- Cloudflare Worker
+- Cloudflare D1 Database
+
+## 简略
+
+FetchBook.org 是一个借由浏览器来判断用户设备的网站，用户可以以自己申领的唯一 username 来保存自己的设备列表。
+
+## 功能
+
+### 首页
+
+用户访问 `/` 的时候，等同于 `/fetch`。
+
+### 核心功能
+
+#### 获取设备信息
+
+当用户访问 `/fetch` 的时候，允许用户以`.json`编辑缺失的信息。当完成后会询问用户是否希望注册一个账号来保存这些信息。
+
+#### 手动上传设备信息
+
+同时，网站也允许手动上传 `fastfetch` 或者 `neofetch` 的文本信息来获取设备信息。网站会将纯文本信息转换成`.json`格式，并允许用户编辑缺失的信息。当完成后会询问用户是否希望注册一个账号来保存这些信息。
+
+#### API 上传
+
+可以通过类似于以下的命令进行上传。
+
+```sh
+fastfetch --format json | curl -X POST https://fetchbook.org/api/upload -H "Content-Type: application/json" -d @-
+```
+
+### 隐藏隐私信息
+
+无论以何种方式上传，都将 `fastfetch` 得到的信息中的隐私信息，例如 `IP`、`MAC` 等，进行隐藏。默认将 `IP` 替换为 `[IP_ADDRESS]`，`MAC` 替换为 `[MAC_ADDRESS]`。
+
+#### 登陆
+
+使用 GitHub OATH 进行授权。`username` 即为用户的 GitHub 的 `username`。
+
+#### 查看
+
+当用户在「Privacy」选项中勾选了「Public」的时候，其他用户可以通过 `/user/{username}` 来查看用户保存的设备列表。默认情况下，用户保存的设备列表是私有的。
+
+#### 销毁
+
+用户可以销毁自己的账号，销毁后，用户保存的设备列表也会被销毁。`username` 会被保留且无法再次申领。
+
+### 样式
+
+网站样式从简，以确保在移动端和桌面端（包括较为古早的设备上）都有良好的体验。
+
