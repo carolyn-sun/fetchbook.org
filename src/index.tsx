@@ -1013,6 +1013,7 @@ app.get("/user/:username", async (c) => {
 	}
 
 	const cliCommand = `curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
+	const psCommand = `Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json" } -Body (fastfetch --format json | Out-String)`;
 
 	return c.html(
 		<Layout title={`${username}'s fetchbook`} user={user}>
@@ -1037,56 +1038,133 @@ app.get("/user/:username", async (c) => {
 						Run this command directly in your terminal to upload a new setup.
 						Keep it secret!
 					</p>
-					<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-						<div
+					<div style={{ marginBottom: "16px" }}>
+						<strong
 							style={{
-								margin: 0,
-								flex: 1,
-								fontFamily: "monospace",
 								fontSize: "0.85rem",
-								padding: "10px",
-								borderRadius: "4px",
-								border: "1px solid #ced4da",
-								background: "#fff",
-								whiteSpace: "pre-wrap",
-								wordBreak: "break-all",
+								color: "#555",
+								display: "block",
+								marginBottom: "8px",
 							}}
 						>
-							curl -X POST -H 'Content-Type: application/json' -H
-							'Authorization: Bearer{" "}
-							<span
-								class="blur-hover"
+							Linux / macOS (Bash/Zsh)
+						</strong>
+						<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+							<div
 								style={{
-									filter: "blur(4px)",
-									transition: "filter 0.2s",
-									cursor: "pointer",
-									background: "#eee",
+									margin: 0,
+									flex: 1,
+									fontFamily: "monospace",
+									fontSize: "0.85rem",
+									padding: "10px",
+									borderRadius: "4px",
+									border: "1px solid #ced4da",
+									background: "#fff",
+									whiteSpace: "pre-wrap",
+									wordBreak: "break-all",
 								}}
 							>
-								{cliToken}
-							</span>
-							' -d "$(fastfetch --format json)" "{origin}/api/upload"
+								curl -X POST -H 'Content-Type: application/json' -H
+								'Authorization: Bearer{" "}
+								<span
+									class="blur-hover"
+									style={{
+										filter: "blur(4px)",
+										transition: "filter 0.2s",
+										cursor: "pointer",
+										background: "#eee",
+									}}
+								>
+									{cliToken}
+								</span>
+								' -d "$(fastfetch --format json)" "{origin}/api/upload"
+							</div>
+							<button
+								type="button"
+								class="copy-token-btn"
+								data-cmd={cliCommand}
+								style={{
+									margin: 0,
+									padding: "8px 0",
+									background: "#212529",
+									color: "#fff",
+									border: "none",
+									fontWeight: "bold",
+									borderRadius: "4px",
+									width: "90px",
+									textAlign: "center",
+									flexShrink: 0,
+									cursor: "pointer",
+								}}
+							>
+								Copy
+							</button>
 						</div>
-						<button
-							type="button"
-							id="copy-token-btn"
-							data-cmd={cliCommand}
+					</div>
+
+					<div>
+						<strong
 							style={{
-								margin: 0,
-								padding: "8px 0",
-								background: "#212529",
-								color: "#fff",
-								border: "none",
-								fontWeight: "bold",
-								borderRadius: "4px",
-								width: "90px",
-								textAlign: "center",
-								flexShrink: 0,
-								cursor: "pointer",
+								fontSize: "0.85rem",
+								color: "#555",
+								display: "block",
+								marginBottom: "8px",
 							}}
 						>
-							Copy
-						</button>
+							Windows (PowerShell)
+						</strong>
+						<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+							<div
+								style={{
+									margin: 0,
+									flex: 1,
+									fontFamily: "monospace",
+									fontSize: "0.85rem",
+									padding: "10px",
+									borderRadius: "4px",
+									border: "1px solid #ced4da",
+									background: "#fff",
+									whiteSpace: "pre-wrap",
+									wordBreak: "break-all",
+								}}
+							>
+								Invoke-RestMethod -Uri "{origin}/api/upload" -Method Post
+								-Headers @{"{"} Authorization = "Bearer{" "}
+								<span
+									class="blur-hover"
+									style={{
+										filter: "blur(4px)",
+										transition: "filter 0.2s",
+										cursor: "pointer",
+										background: "#eee",
+									}}
+								>
+									{cliToken}
+								</span>
+								"; "Content-Type" = "application/json" {"}"} -Body (fastfetch
+								--format json | Out-String)
+							</div>
+							<button
+								type="button"
+								class="copy-token-btn"
+								data-cmd={psCommand}
+								style={{
+									margin: 0,
+									padding: "8px 0",
+									background: "#212529",
+									color: "#fff",
+									border: "none",
+									fontWeight: "bold",
+									borderRadius: "4px",
+									width: "90px",
+									textAlign: "center",
+									flexShrink: 0,
+									cursor: "pointer",
+								}}
+							>
+								Copy
+							</button>
+						</div>
 					</div>
 					<style
 						dangerouslySetInnerHTML={{
@@ -1098,11 +1176,13 @@ app.get("/user/:username", async (c) => {
 					<script
 						dangerouslySetInnerHTML={{
 							__html: `
-            document.getElementById('copy-token-btn').addEventListener('click', function() {
-              navigator.clipboard.writeText(this.getAttribute('data-cmd'));
-              const old = this.innerText;
-              this.innerText = 'Copied';
-              setTimeout(() => this.innerText = old, 1500);
+            document.querySelectorAll('.copy-token-btn').forEach(btn => {
+              btn.addEventListener('click', function() {
+                navigator.clipboard.writeText(this.getAttribute('data-cmd'));
+                const old = this.innerText;
+                this.innerText = 'Copied';
+                setTimeout(() => this.innerText = old, 1500);
+              });
             });
           `,
 						}}
