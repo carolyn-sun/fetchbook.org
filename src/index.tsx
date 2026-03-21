@@ -208,13 +208,9 @@ const Layout = (props: {
 	</html>
 );
 
-// Helper to sanitize MAC/IP
+// Helper to sanitize MAC/IP (disabled)
 const sanitizeDeviceInfo = (info: any) => {
-	let str = JSON.stringify(info);
-	// Basic naive replacement for IPs and MACs
-	str = str.replace(/(?:[0-9]{1,3}\.){3}[0-9]{1,3}/g, "[IP_ADDRESS]");
-	str = str.replace(/(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}/g, "[MAC_ADDRESS]");
-	return JSON.parse(str);
+	return info;
 };
 
 const parseTextInfo = (text: string) => {
@@ -565,7 +561,7 @@ app.get("/", async (c) => {
 	const user = c.get("user");
 
 	const recentRes = await c.env.DB.prepare(
-		"SELECT username FROM devices WHERE is_public = 1 GROUP BY username ORDER BY MAX(created_at) DESC LIMIT 30",
+		"SELECT username FROM devices GROUP BY username ORDER BY MAX(created_at) DESC LIMIT 30",
 	).all();
 	const recentUsers = (recentRes.results || [])
 		.map((r: any) => String(r.username))
@@ -656,27 +652,6 @@ app.get("/", async (c) => {
 									required
 									placeholder="Paste raw fastfetch JSON output..."
 								></textarea>
-							</label>
-
-							<label
-								style={{
-									display: "flex",
-									alignItems: "center",
-									gap: "8px",
-									cursor: "pointer",
-									marginBottom: "1rem",
-								}}
-							>
-								<input
-									type="checkbox"
-									name="is_public"
-									value="1"
-									checked={true}
-									style={{ width: "auto", margin: 0 }}
-								/>
-								<span style={{ margin: 0 }}>
-									Make this public on my fetchbook
-								</span>
 							</label>
 
 							<br />
@@ -833,10 +808,9 @@ app.post("/api/upload", async (c) => {
 		deviceInfo = normalizeJSON(rawObj);
 	} else {
 		// If it was already parsed as JSON (e.g. from JSON body) as an object wrapper
-		const { username: _u, is_public, ...rest } = deviceInfoRaw;
+		const { username: _u, is_public: _p, ...rest } = deviceInfoRaw;
 		rawObj = Object.keys(rest).length ? rest : deviceInfoRaw;
 		deviceInfo = normalizeJSON(rawObj);
-		deviceInfoRaw = { is_public, ...rest }; // for tracking is_public
 	}
 
 	const sanitized = sanitizeDeviceInfo(deviceInfo);
@@ -855,23 +829,13 @@ app.post("/api/upload", async (c) => {
 		);
 	}
 
-	let isPublic = 1;
-	if (
-		typeof deviceInfoRaw === "object" &&
-		!Array.isArray(deviceInfoRaw) &&
-		"is_public" in deviceInfoRaw
-	) {
-		isPublic = deviceInfoRaw.is_public ? 1 : 0;
-	}
-
 	await c.env.DB.prepare(
-		"INSERT INTO devices (username, device_info, raw_device_info, is_public) VALUES (?, ?, ?, ?)",
+		"INSERT INTO devices (username, device_info, raw_device_info) VALUES (?, ?, ?)",
 	)
 		.bind(
 			finalUsername,
 			JSON.stringify(sanitized),
 			sanitizedRaw ? JSON.stringify(sanitizedRaw) : null,
-			isPublic,
 		)
 		.run();
 
@@ -881,7 +845,6 @@ app.post("/api/upload", async (c) => {
 app.post("/api/web-upload", async (c) => {
 	const body = await c.req.parseBody();
 	const username = body.username as string;
-	const isPublic = body.is_public === "1";
 
 	const user = c.get("user");
 	if (!user || user.username !== username) {
@@ -919,13 +882,12 @@ app.post("/api/web-upload", async (c) => {
 	}
 
 	await c.env.DB.prepare(
-		"INSERT INTO devices (username, device_info, raw_device_info, is_public) VALUES (?, ?, ?, ?)",
+		"INSERT INTO devices (username, device_info, raw_device_info) VALUES (?, ?, ?)",
 	)
 		.bind(
 			username,
 			JSON.stringify(sanitized),
 			sanitizedRaw ? JSON.stringify(sanitizedRaw) : null,
-			isPublic ? 1 : 0,
 		)
 		.run();
 
@@ -937,13 +899,13 @@ app.get("/random", async (c) => {
 	let randomRes: any;
 	if (exclude) {
 		randomRes = await c.env.DB.prepare(
-			"SELECT DISTINCT username FROM devices WHERE is_public = 1 AND username != ? ORDER BY RANDOM() LIMIT 1",
+			"SELECT DISTINCT username FROM devices WHERE username != ? ORDER BY RANDOM() LIMIT 1",
 		)
 			.bind(exclude)
 			.all();
 	} else {
 		randomRes = await c.env.DB.prepare(
-			"SELECT DISTINCT username FROM devices WHERE is_public = 1 ORDER BY RANDOM() LIMIT 1",
+			"SELECT DISTINCT username FROM devices ORDER BY RANDOM() LIMIT 1",
 		).all();
 	}
 	const randomUser = randomRes.results?.[0]?.username;
@@ -957,31 +919,21 @@ app.get("/user/:username", async (c) => {
 	const username = c.req.param("username");
 	const user = c.get("user");
 
-	let results: any[];
 	const isOwner = user && user.username === username;
 
 	const otherRes = await c.env.DB.prepare(
-		"SELECT username FROM devices WHERE is_public = 1 AND username != ? LIMIT 1",
+		"SELECT username FROM devices WHERE username != ? LIMIT 1",
 	)
 		.bind(username)
 		.all();
 	const hasOtherUsers = otherRes.results && otherRes.results.length > 0;
 
-	if (isOwner) {
-		const res = await c.env.DB.prepare(
-			"SELECT * FROM devices WHERE username = ? ORDER BY created_at DESC",
-		)
-			.bind(username)
-			.all();
-		results = res.results;
-	} else {
-		const res = await c.env.DB.prepare(
-			"SELECT * FROM devices WHERE username = ? AND is_public = 1 ORDER BY created_at DESC",
-		)
-			.bind(username)
-			.all();
-		results = res.results;
-	}
+	const res = await c.env.DB.prepare(
+		"SELECT * FROM devices WHERE username = ? ORDER BY created_at DESC",
+	)
+		.bind(username)
+		.all();
+	const results: any[] = res.results;
 
 	const origin = new URL(c.req.url).origin;
 	let cliToken = "";
@@ -1155,7 +1107,7 @@ app.get("/user/:username", async (c) => {
 				/>
 			</div>
 			{results.length === 0 ? (
-				<p>No devices found or they are private.</p>
+				<p>No devices found.</p>
 			) : (
 				results.map((row: any) => (
 					<div class="card">
@@ -1177,56 +1129,12 @@ app.get("/user/:username", async (c) => {
 										</time>
 									</small>
 								</p>
-								{row.is_public ? (
-									<span
-										style={{
-											color: "green",
-											fontSize: "0.8rem",
-											fontWeight: "bold",
-										}}
-									>
-										🌐 Public
-									</span>
-								) : (
-									<span
-										style={{
-											color: "red",
-											fontSize: "0.8rem",
-											fontWeight: "bold",
-										}}
-									>
-										🔒 Private
-									</span>
-								)}
 							</div>
 
 							{isOwner && (
 								<div
 									style={{ display: "flex", gap: "8px", alignItems: "center" }}
 								>
-									<form
-										method="post"
-										action={`/api/device/${row.id}/visibility`}
-										style={{ margin: 0 }}
-									>
-										<input
-											type="hidden"
-											name="is_public"
-											value={row.is_public ? "0" : "1"}
-										/>
-										<button
-											type="submit"
-											style={{
-												padding: "4px 8px",
-												fontSize: "0.8rem",
-												background: "#eee",
-												color: "#333",
-												border: "1px solid #ccc",
-											}}
-										>
-											{row.is_public ? "Make Private" : "Make Public"}
-										</button>
-									</form>
 									<form
 										method="post"
 										action={`/api/device/${row.id}/delete`}
@@ -1289,23 +1197,6 @@ app.get("/user/:username", async (c) => {
 			)}
 		</Layout>,
 	);
-});
-
-app.post("/api/device/:id/visibility", async (c) => {
-	const id = c.req.param("id");
-	const user = c.get("user");
-	if (!user) return c.text("Unauthorized", 401);
-
-	const body = await c.req.parseBody();
-	const isPublic = body.is_public === "1" ? 1 : 0;
-
-	await c.env.DB.prepare(
-		"UPDATE devices SET is_public = ? WHERE id = ? AND username = ?",
-	)
-		.bind(isPublic, id, user.username)
-		.run();
-
-	return c.redirect(`/user/${user.username}`);
 });
 
 app.post("/api/device/:id/delete", async (c) => {
