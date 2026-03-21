@@ -35,13 +35,14 @@ code, pre, kbd, textarea, .terminal-block, .code-inline-box, .share-link-box {
 
 .danger-btn {
   background: #ff4444; color: #fff; border-color: #ff4444;
-  padding: 6px 12px; font-size: 0.85rem;
+  padding: 6px 12px; font-size: 0.85rem; width: 85px; flex-shrink: 0;
 }
 .danger-btn:hover { background: #cc0000; border-color: #cc0000; }
-
-/* Prevent time flash on load */
-.js-enabled time.local-time { opacity: 0; }
-.js-enabled time.local-time.loaded { opacity: 1; transition: opacity 0.2s ease-in; }
+/* Text replacement jitter prevention */
+.copy-token-btn, #copy-btn {
+  width: 90px;
+  flex-shrink: 0;
+}
 
 /* Global Layout & Core Selectors */
 body {
@@ -68,4 +69,63 @@ pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; 
   html { background-color: #000; }
   #root { filter: invert(1) hue-rotate(180deg); }
   .terminal-block, img, video, iframe { filter: invert(1) hue-rotate(180deg); }
+}
+
+/* Card Headers */
+.card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.card-header-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.card-note-form { margin: 0; }
+.card-note-input {
+  color: #333; font-size: 1rem; font-weight: bold;
+  background: #fff; border: 1px solid #ccc;
+  border-radius: 4px; padding: 4px 8px;
+  margin: 0; font-family: inherit; width: 100%; max-width: 250px;
+}
+.card-note-title { margin: 0; color: #333; font-size: 1.1rem; }
+.card-meta-row { display: flex; align-items: center; gap: 10px; }
+.badge {
+  padding: 2px 8px; border-radius: 12px;
+  font-size: 0.8rem; font-weight: bold;
+}
+.badge-public { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+.badge-private { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+
+/* Timeline Footers */
+.terminal-container { margin-top: 1rem; }
+.card-time-wrapper { margin-top: 12px; text-align: right; }
+.card-time { color: #888; font-size: 0.85rem; }
+
+/* Forms & Spacing */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.form-label-title {
+  font-size: 1rem;
+  color: #333;
+  margin: 0;
+}
+.form-textarea {
+  margin: 0;
+}
+.form-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  margin-bottom: 24px;
 }

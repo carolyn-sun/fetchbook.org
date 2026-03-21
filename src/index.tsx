@@ -557,25 +557,20 @@ app.get("/", async (c) => {
 				>
 					{user ? (
 						<>
-							<label>
-								<strong>Device Info (JSON ONLY)</strong>
+							<label class="form-group">
+								<strong class="form-label-title">
+									Device Info (JSON ONLY)
+								</strong>
 								<textarea
 									name="device_info"
+									class="form-textarea"
 									rows={6}
 									required
 									placeholder="Paste raw fastfetch JSON output..."
 								></textarea>
 							</label>
 
-							<label
-								style={{
-									display: "flex",
-									alignItems: "center",
-									gap: "8px",
-									cursor: "pointer",
-									marginBottom: "1rem",
-								}}
-							>
+							<label class="form-checkbox-group">
 								<input
 									type="checkbox"
 									name="is_public"
@@ -588,7 +583,6 @@ app.get("/", async (c) => {
 								</span>
 							</label>
 
-							<br />
 							<button type="submit" class="primary-btn">
 								Publish to fetchbook
 							</button>
@@ -1056,7 +1050,7 @@ app.get("/user/:username", async (c) => {
 						whiteSpace: "pre-wrap",
 						wordBreak: "break-all",
 					}}
-				></div>
+				>{`${origin}/user/${username}`}</div>
 				<button type="button" id="copy-btn" class="secondary-btn">
 					Copy
 				</button>
@@ -1066,21 +1060,13 @@ app.get("/user/:username", async (c) => {
 			) : (
 				results.map((row: any) => (
 					<div class="card">
-						<div
-							style={{
-								display: "flex",
-								justifyContent: "space-between",
-								alignItems: "center",
-								flexWrap: "wrap",
-								gap: "12px",
-							}}
-						>
-							<div>
+						<div class="card-header-row">
+							<div class="card-header-left">
 								{isOwner ? (
 									<form
 										method="post"
 										action={`/api/device/${row.id}/edit`}
-										style={{ margin: "0 0 4px 0" }}
+										class="card-note-form"
 										{...({ onsubmit: "event.preventDefault();" } as any)}
 									>
 										<input
@@ -1094,63 +1080,20 @@ app.get("/user/:username", async (c) => {
 												onchange:
 													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams(new FormData(this.form)) }); this.blur();",
 											} as any)}
-											style={{
-												color: "#333",
-												fontSize: "1rem",
-												fontWeight: "bold",
-												background: "#fff",
-												border: "1px solid #ccc",
-												borderRadius: "4px",
-												padding: "4px 8px",
-												margin: 0,
-												fontFamily: "inherit",
-												width: "100%",
-												maxWidth: "250px",
-											}}
+											class="card-note-input"
 										/>
 									</form>
 								) : row.note ? (
-									<h3
-										style={{
-											margin: "0 0 4px 0",
-											color: "#333",
-											fontSize: "1.1rem",
-										}}
-									>
-										{row.note}
-									</h3>
+									<h3 class="card-note-title">{row.note}</h3>
 								) : null}
-								<p style={{ margin: 0 }}>
-									<small>
-										<time
-											class="local-time"
-											datetime={`${row.created_at.replace(" ", "T")}Z`}
-										>
-											{row.created_at}
-										</time>
-									</small>
-								</p>
-								{row.is_public ? (
-									<span
-										style={{
-											color: "green",
-											fontSize: "0.8rem",
-											fontWeight: "bold",
-										}}
-									>
-										🌐 Public
-									</span>
-								) : (
-									<span
-										style={{
-											color: "red",
-											fontSize: "0.8rem",
-											fontWeight: "bold",
-										}}
-									>
-										🔒 Private
-									</span>
-								)}
+
+								<div class="card-meta-row">
+									{row.is_public ? (
+										<span class="badge badge-public">🌐 Public</span>
+									) : (
+										<span class="badge badge-private">🔒 Private</span>
+									)}
+								</div>
 							</div>
 
 							{isOwner && (
@@ -1223,7 +1166,7 @@ app.get("/user/:username", async (c) => {
 											type="button"
 											{...({
 												onclick:
-													"if(confirm('Delete this device permanently?')) { fetch(this.form.action, { method: 'POST' }).then(() => this.closest('.card').remove()); }",
+													"if(this.dataset.confirm !== '1') { this.dataset.confirm = '1'; this.innerText = 'Confirm'; setTimeout(() => { this.dataset.confirm = '0'; this.innerText = 'Delete'; }, 3000); } else { fetch(this.form.action, { method: 'POST' }).then(() => this.closest('.card').remove()); }",
 											} as any)}
 											class="danger-btn"
 										>
@@ -1233,7 +1176,7 @@ app.get("/user/:username", async (c) => {
 								</div>
 							)}
 						</div>
-						<div style="margin-top: 1rem;">
+						<div class="terminal-container">
 							<FastfetchRenderer
 								username={row.username}
 								info={
@@ -1242,6 +1185,13 @@ app.get("/user/:username", async (c) => {
 										: JSON.parse(row.device_info)
 								}
 							/>
+							<div class="card-time-wrapper">
+								<span class="card-time">
+									<time datetime={`${row.created_at.replace(" ", "T")}Z`}>
+										Uploaded at {row.created_at.slice(0, 16)} UTC
+									</time>
+								</span>
+							</div>
 						</div>
 					</div>
 				))
