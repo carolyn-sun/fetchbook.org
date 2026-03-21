@@ -985,14 +985,14 @@ app.get("/user/:username", async (c) => {
 
 	if (isOwner) {
 		const res = await c.env.DB.prepare(
-			"SELECT * FROM devices WHERE username = ? ORDER BY sort_order DESC, created_at DESC",
+			"SELECT * FROM devices WHERE username = ? ORDER BY sort_order DESC, created_at DESC, id DESC",
 		)
 			.bind(username)
 			.all();
 		results = res.results;
 	} else {
 		const res = await c.env.DB.prepare(
-			"SELECT * FROM devices WHERE username = ? AND is_public = 1 ORDER BY sort_order DESC, created_at DESC",
+			"SELECT * FROM devices WHERE username = ? AND is_public = 1 ORDER BY sort_order DESC, created_at DESC, id DESC",
 		)
 			.bind(username)
 			.all();
@@ -1363,7 +1363,7 @@ app.get("/user/:username", async (c) => {
 											title="Move Up"
 											{...({
 												onclick:
-													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'up' }) }).then(() => { const c = this.closest('.card'); if (c.previousElementSibling) c.parentNode.insertBefore(c, c.previousElementSibling); });",
+													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'up' }) }).then(() => { const c = this.closest('.card'); const p = c.previousElementSibling; if (p && p.classList.contains('card')) c.parentNode.insertBefore(c, p); });",
 											} as any)}
 											style={{
 												padding: "4px 8px",
@@ -1382,7 +1382,7 @@ app.get("/user/:username", async (c) => {
 											title="Move Down"
 											{...({
 												onclick:
-													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'down' }) }).then(() => { const c = this.closest('.card'); if (c.nextElementSibling) c.parentNode.insertBefore(c.nextElementSibling, c); });",
+													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'down' }) }).then(() => { const c = this.closest('.card'); const n = c.nextElementSibling; if (n && n.classList.contains('card')) c.parentNode.insertBefore(n, c); });",
 											} as any)}
 											style={{
 												padding: "4px 8px",
