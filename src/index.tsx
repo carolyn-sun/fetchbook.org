@@ -1013,7 +1013,7 @@ app.get("/user/:username", async (c) => {
 	}
 
 	const cliCommand = `curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
-	const psCommand = `Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json" } -Body (fastfetch --format json | Out-String)`;
+	const psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json" } -Body $data`;
 
 	return c.html(
 		<Layout title={`${username}'s fetchbook`} user={user}>
@@ -1128,8 +1128,10 @@ app.get("/user/:username", async (c) => {
 									wordBreak: "break-all",
 								}}
 							>
-								Invoke-RestMethod -Uri "{origin}/api/upload" -Method Post
-								-Headers @{"{"} Authorization = "Bearer{" "}
+								[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data
+								= fastfetch --format json | Out-String; Invoke-RestMethod -Uri "
+								{origin}/api/upload" -Method Post -Headers @{"{"} Authorization
+								= "Bearer{" "}
 								<span
 									class="blur-hover"
 									style={{
@@ -1141,8 +1143,7 @@ app.get("/user/:username", async (c) => {
 								>
 									{cliToken}
 								</span>
-								"; "Content-Type" = "application/json" {"}"} -Body (fastfetch
-								--format json | Out-String)
+								"; "Content-Type" = "application/json" {"}"} -Body $data
 							</div>
 							<button
 								type="button"
