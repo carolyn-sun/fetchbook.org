@@ -960,13 +960,13 @@ app.get("/user/:username", async (c) => {
 							data-cmd={cliCommand}
 							style={{
 								margin: 0,
-								padding: "8px 16px",
+								padding: "8px 0",
 								background: "#212529",
 								color: "#fff",
 								border: "none",
 								fontWeight: "bold",
 								borderRadius: "4px",
-								width: "80px",
+								width: "90px",
 								textAlign: "center",
 								flexShrink: 0,
 								cursor: "pointer",
@@ -1028,14 +1028,14 @@ app.get("/user/:username", async (c) => {
 					id="copy-btn"
 					style={{
 						margin: 0,
-						padding: "8px 16px",
+						padding: "8px 0",
 						background: "#efefef",
 						color: "#333",
 						border: "1px solid #ccc",
 						fontWeight: "bold",
 						borderRadius: "4px",
 						flexShrink: 0,
-						width: "80px",
+						width: "90px",
 						textAlign: "center",
 					}}
 				>
