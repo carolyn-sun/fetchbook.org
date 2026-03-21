@@ -1,4 +1,15 @@
+# Cloudflare Wrangler files
 .wrangler
+
+# Node.js package files
 node_modules
+
+# Token files
 .dev.vars
+
+# macOS system files
 .DS_Store
+
+# Temporary files
+temp.json
+text.json
