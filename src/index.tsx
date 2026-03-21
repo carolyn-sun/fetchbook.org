@@ -302,8 +302,12 @@ const formatFastfetchResult = (
 		return `${result.prettyName || result.name || ""} ${result.version || ""}`.trim();
 	if (t === "resolution" || t === "display") {
 		if (!Array.isArray(result)) result = [result];
-		return result.map((d: any) => {
-			const suffix = d.name ? ` (${d.name})` : "";
+		return result.map((d: any, index: number) => {
+			const suffix = d.name
+				? ` (${d.name})`
+				: result.length > 1
+					? ` (${index + 1})`
+					: "";
 			const res = `${d.output?.width || d.width || 0}x${d.output?.height || d.height || 0}`;
 			const rate = d.output?.refreshRate || d.refreshRate || 0;
 			const rateStr = rate > 0 ? ` @ ${rate} Hz` : "";
@@ -324,12 +328,14 @@ const formatFastfetchResult = (
 	}
 	if (t === "gpu") {
 		if (!Array.isArray(result)) result = [result];
-		return result.map((g: any) => {
+		return result.map((g: any, index: number) => {
 			const freq = g.frequency || 0;
 			const freqStr = freq > 0 ? `@ ${(freq / 1000).toFixed(2)} GHz ` : "";
 			const cores = g.coreCount ? `(${g.coreCount}) ` : "";
 			const typ = g.type ? `[${g.type}]` : "";
+			const suffix = result.length > 1 ? ` (${index + 1})` : "";
 			return {
+				keySuffix: suffix,
 				value: `${g.name || g.gpu || ""} ${cores}${freqStr}${typ}`.trim(),
 			};
 		});
@@ -358,8 +364,7 @@ const formatFastfetchResult = (
 		if (!Array.isArray(result)) result = [result];
 		return result
 			.map((d: any) => {
-				const mp = d.mountpoint || "/";
-				if (mp !== "/") return null; // User explicitly asked for "Disk (/)" display initially, we will mimic fastfetch formatting per disk
+				const mp = d.mountpoint || d.name || "/";
 				const suffix = ` (${mp})`;
 				const bytes = d.bytes || d;
 				let perc = 0;
