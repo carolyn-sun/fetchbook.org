@@ -66,51 +66,9 @@ const Layout = (props: {
 			/>
 			<title>{props.title} - fetchbook.org</title>
 			<link rel="stylesheet" href="/styles.css" />
-			<style
-				dangerouslySetInnerHTML={{
-					__html: `
-        body {
-          margin: 0; padding: 0; background-color: transparent;
-        }
-        #root { line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; background-color: #fff; min-height: 100vh; box-sizing: border-box; }
-        h1 { margin-top: 0; }
-        textarea, input, select { width: 100%; box-sizing: border-box; padding: 0.5rem; margin-bottom: 1rem; }
-        textarea { font-size: 0.95rem; }
-        button { font-family: inherit; font-size: 1rem; background: #000; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px;}
-        button:hover { background: #444; }
-        pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; font-size: 0.9rem; }
-        .card { border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;}
-        @media (max-width: 768px) {
-          .hide-on-mobile { display: none !important; }
-        }
-        @media (prefers-color-scheme: dark) {
-          html { background-color: #000; }
-          #root { filter: invert(1) hue-rotate(180deg); }
-          .terminal-block, img, video, iframe { filter: invert(1) hue-rotate(180deg); }
-        }
-      `,
-				}}
-			/>
-			<script
-				dangerouslySetInnerHTML={{
-					__html: `
-        document.addEventListener("DOMContentLoaded", () => {
-          document.querySelectorAll("time.local-time").forEach(el => {
-            const dt = el.getAttribute("datetime");
-            if (dt) {
-              const utcDate = new Date(dt);
-              if (!isNaN(utcDate.getTime())) {
-                el.textContent = utcDate.toLocaleString(undefined, {
-                  year: "numeric", month: "short", day: "numeric",
-                  hour: "2-digit", minute: "2-digit", second: "2-digit"
-                });
-              }
-            }
-          });
-        });
-      `,
-				}}
-			/>
+			<link rel="stylesheet" href="/terminal.css" />
+
+			<script src="/script.js" defer></script>
 		</head>
 		<body>
 			<div id="root">
@@ -493,72 +451,29 @@ const FastfetchRenderer = ({
 	info: Record<string, any>;
 }) => {
 	const keys = Object.keys(info);
-	const primaryColor = "#00d2ff"; // Synapse Cyan
 
 	return (
-		<div
-			className="terminal-block"
-			style={{
-				backgroundColor: "#1E1E1E",
-				color: "#D4D4D4",
-				borderRadius: "8px",
-				overflow: "hidden",
-				maxWidth: "100%",
-				border: "1px solid #333",
-			}}
-		>
+		<div className="terminal-block">
 			{/* Terminal Body */}
-			<div
-				style={{
-					padding: "1.5rem",
-					display: "flex",
-					alignItems: "center",
-					gap: "2.5rem",
-					overflowX: "auto",
-					fontSize: "14px",
-					lineHeight: "1.5",
-				}}
-			>
+			<div class="terminal-body">
 				<pre
-					class="hide-on-mobile"
-					style={{
-						margin: 0,
-						background: "transparent",
-						padding: 0,
-						fontFamily: "inherit",
-						lineHeight: 1.2,
-						flexShrink: 0,
-						textShadow: "0 0 5px rgba(255, 255, 255, 0.1)",
-					}}
+					class="hide-on-mobile terminal-logo-box"
 					dangerouslySetInnerHTML={{
 						__html: getLogoForOS(info.OS || info.os || info.Os),
 					}}
 				></pre>
-				<div
-					style={{
-						display: "flex",
-						flexDirection: "column",
-						justifyContent: "center",
-					}}
-				>
-					<div style={{ fontWeight: "bold", marginBottom: "4px" }}>
-						<span style={{ color: primaryColor }}>
-							{info["User@Host"] || `${username}@fetchbook`}
-						</span>
+				<div class="terminal-details">
+					<div class="terminal-host">
+						<span>{info["User@Host"] || `${username}@fetchbook`}</span>
 					</div>
-					<div style={{ marginBottom: "8px", color: "#8A8A8A" }}>
-						-------------------------
-					</div>
+					<div class="terminal-separator">-------------------------</div>
 					{keys.map((key) => {
 						if (key === "User@Host") return null;
 						const val = info[key];
 						if (typeof val === "string" || typeof val === "number") {
 							return (
 								<div key={key}>
-									<span style={{ color: primaryColor, fontWeight: "bold" }}>
-										{key}
-									</span>
-									: {val}
+									<span class="terminal-key">{key}</span>: {val}
 								</div>
 							);
 						}
@@ -642,21 +557,6 @@ app.get("/", async (c) => {
 				>
 					{user ? (
 						<>
-							<label>
-								<strong>Username</strong>
-								<input
-									type="text"
-									name="username"
-									value={user.username}
-									readOnly
-									style={{
-										background: "#e9ecef",
-										cursor: "not-allowed",
-										color: "#495057",
-									}}
-								/>
-							</label>
-
 							<label>
 								<strong>Device Info (JSON ONLY)</strong>
 								<textarea
@@ -865,16 +765,13 @@ app.post("/api/upload", async (c) => {
 
 app.post("/api/web-upload", async (c) => {
 	const body = await c.req.parseBody();
-	const username = body.username as string;
 	const isPublic = body.is_public === "1";
 
 	const user = c.get("user");
-	if (!user || user.username !== username) {
-		return c.text(
-			"Unauthorized: You can only upload to your own account.",
-			401,
-		);
+	if (!user) {
+		return c.text("Unauthorized: Please login.", 401);
 	}
+	const username = user.username;
 
 	let deviceInfo: any;
 	let rawObj: any = null;
@@ -1131,27 +1028,6 @@ app.get("/user/:username", async (c) => {
 							</button>
 						</div>
 					</div>
-					<style
-						dangerouslySetInnerHTML={{
-							__html: `
-            .blur-hover:hover { filter: none !important; }
-          `,
-						}}
-					/>
-					<script
-						dangerouslySetInnerHTML={{
-							__html: `
-            document.querySelectorAll('.copy-token-btn').forEach(btn => {
-              btn.addEventListener('click', function() {
-                navigator.clipboard.writeText(this.getAttribute('data-cmd'));
-                const old = this.innerText;
-                this.innerText = 'Copied';
-                setTimeout(() => this.innerText = old, 1500);
-              });
-            });
-          `,
-						}}
-					/>
 				</div>
 			)}
 
@@ -1184,20 +1060,6 @@ app.get("/user/:username", async (c) => {
 				<button type="button" id="copy-btn" class="secondary-btn">
 					Copy
 				</button>
-				<script
-					dangerouslySetInnerHTML={{
-						__html: `
-          const linkInput = document.getElementById('share-link');
-          linkInput.innerText = window.location.href;
-          document.getElementById('copy-btn').addEventListener('click', function() {
-            navigator.clipboard.writeText(linkInput.innerText);
-            const old = this.innerText;
-            this.innerText = 'Copied';
-            setTimeout(() => this.innerText = old, 1500);
-          });
-        `,
-					}}
-				/>
 			</div>
 			{results.length === 0 ? (
 				<p>No devices found or they are private.</p>

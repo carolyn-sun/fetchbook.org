@@ -1,0 +1,58 @@
+/* terminal.css - Fastfetch Terminal Output Renderer Component */
+
+:root {
+  --terminal-primary: #00d2ff; /* Synapse Cyan */
+}
+
+.terminal-block {
+  background-color: #1E1E1E;
+  color: #D4D4D4;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 100%;
+  border: 1px solid #333;
+}
+
+.terminal-body {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.terminal-logo-box {
+  margin: 0;
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+  line-height: 1.2;
+  flex-shrink: 0;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.terminal-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.terminal-host {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+.terminal-host span {
+  color: var(--terminal-primary);
+}
+
+.terminal-separator {
+  margin-bottom: 8px;
+  color: #8A8A8A;
+}
+
+.terminal-key {
+  color: var(--terminal-primary);
+  font-weight: bold;
+}

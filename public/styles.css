@@ -38,3 +38,34 @@ code, pre, kbd, textarea, .terminal-block, .code-inline-box, .share-link-box {
   padding: 6px 12px; font-size: 0.85rem;
 }
 .danger-btn:hover { background: #cc0000; border-color: #cc0000; }
+
+/* Prevent time flash on load */
+.js-enabled time.local-time { opacity: 0; }
+.js-enabled time.local-time.loaded { opacity: 1; transition: opacity 0.2s ease-in; }
+
+/* Global Layout & Core Selectors */
+body {
+  margin: 0; padding: 0; background-color: transparent;
+}
+#root { line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; background-color: #fff; min-height: 100vh; box-sizing: border-box; }
+h1 { margin-top: 0; }
+textarea, input, select { width: 100%; box-sizing: border-box; padding: 0.5rem; margin-bottom: 1rem; }
+textarea { font-size: 0.95rem; resize: none; }
+button { font-family: inherit; font-size: 1rem; background: #000; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px;}
+button:hover { background: #444; }
+pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; font-size: 0.9rem; }
+.card { border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;}
+
+/* Interaction States */
+.blur-hover:hover { filter: none !important; }
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .hide-on-mobile { display: none !important; }
+}
+
+@media (prefers-color-scheme: dark) {
+  html { background-color: #000; }
+  #root { filter: invert(1) hue-rotate(180deg); }
+  .terminal-block, img, video, iframe { filter: invert(1) hue-rotate(180deg); }
+}
