@@ -662,7 +662,8 @@ export const getLogoForOS = (os?: string) => {
   if (LOGOS[lower]) return LOGOS[lower];
   
   // Fuzzy fallback
-  for (const key of Object.keys(LOGOS)) {
+  const sortedKeys = Object.keys(LOGOS).sort((a, b) => b.length - a.length);
+  for (const key of sortedKeys) {
     if (lower.includes(key)) return LOGOS[key];
   }
   return LOGOS['debian'] || '';
