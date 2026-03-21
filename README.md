@@ -39,3 +39,7 @@ The server will boot up interactively (typically at `http://localhost:8787`).
 ## Contributing
 
 Pre-commit hooks are natively enforced via Husky and Biome for strict formatting and syntactical safety. Be sure to test changes via `npm run lint` and `npm run build` prior to committing.
+
+## TODO
+
+- [ ] Customize the appearance of the terminal output
