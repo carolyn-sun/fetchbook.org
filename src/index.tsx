@@ -386,6 +386,17 @@ const formatFastfetchResult = (
 			return result.map((b: any) => `${b.capacity}% [${b.status}]`).join(", ");
 		return `${result.capacity}% [${result.status}]`;
 	}
+	if (t === "poweradapter") {
+		if (!Array.isArray(result)) result = [result];
+		return result
+			.map((p: any) => {
+				const w = p.watts ? `${p.watts}W` : "";
+				const name = p.name && p.name !== "0" ? ` (${p.name})` : "";
+				return `${w}${name}`.trim();
+			})
+			.filter(Boolean)
+			.join(", ");
+	}
 	if (t === "localip") {
 		if (Array.isArray(result))
 			return result
