@@ -286,7 +286,7 @@ const formatFastfetchResult = (
 	if (t === "kernel")
 		return `${result.name || ""} ${result.release || result.version || ""}`.trim();
 	if (t === "uptime") {
-		let s = result.uptime || 0;
+		let s = (result.uptime || 0) / 1000;
 		const days = Math.floor(s / 86400);
 		s %= 86400;
 		const hours = Math.floor(s / 3600);
