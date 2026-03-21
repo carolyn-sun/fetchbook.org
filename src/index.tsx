@@ -46,15 +46,20 @@ const Layout = (props: {
 			<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 			<title>{props.title} - fetchbook.org</title>
 			<style>{`
+        html { background-color: #fff; }
         body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; }
         h1 { margin-top: 0; }
         textarea, input, select { width: 100%; box-sizing: border-box; padding: 0.5rem; margin-bottom: 1rem; }
-        button { background: #000; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px;}
+        button { font-family: inherit; font-size: 1rem; background: #000; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px;}
         button:hover { background: #444; }
         pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; }
         .card { border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; border-radius: 4px;}
         @media (max-width: 768px) {
           .hide-on-mobile { display: none !important; }
+        }
+        @media (prefers-color-scheme: dark) {
+          html { filter: invert(1) hue-rotate(180deg); }
+          .terminal-block, img, video, iframe { filter: invert(1) hue-rotate(180deg); }
         }
       `}</style>
 			<script
@@ -458,6 +463,7 @@ const FastfetchRenderer = ({
 
 	return (
 		<div
+			className="terminal-block"
 			style={{
 				backgroundColor: "#1E1E1E",
 				color: "#D4D4D4",
