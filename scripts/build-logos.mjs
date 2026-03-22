@@ -138,8 +138,16 @@ export const getLogoForOS = (os?: string) => {
   
   if (LOGOS[lower]) return LOGOS[lower];
   
-  // Fuzzy fallback
   const sortedKeys = Object.keys(LOGOS).sort((a, b) => b.length - a.length);
+
+  // Exact word boundary match first
+  for (const key of sortedKeys) {
+    if (new RegExp(\`\\\\b\${key.replace(/[-\\\\/\\\\^$*+?.()|[\\\\]{}]/g, '\\\\$&')}\\\\b\`).test(lower)) {
+      return LOGOS[key];
+    }
+  }
+
+  // Fuzzy fallback
   for (const key of sortedKeys) {
     if (lower.includes(key)) return LOGOS[key];
   }

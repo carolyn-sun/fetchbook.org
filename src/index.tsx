@@ -431,6 +431,12 @@ const normalizeJSON = (parsed: any): Record<string, string> => {
 					});
 				} else if (formatted !== "") {
 					result[key] = formatted as string;
+					if (lowerType === "os" && item.result && item.result.id) {
+						result["OS_ID"] = item.result.id;
+						if (item.result.idLike) {
+							result["OS_ID_LIKE"] = item.result.idLike;
+						}
+					}
 				}
 			} else {
 				result[key] = JSON.stringify(item);
@@ -461,7 +467,9 @@ const FastfetchRenderer = ({
 				<pre
 					class="hide-on-mobile terminal-logo-box"
 					dangerouslySetInnerHTML={{
-						__html: getLogoForOS(info.OS || info.os || info.Os),
+						__html: getLogoForOS(
+							info.OS_ID || info.OS_ID_LIKE || info.OS || info.os || info.Os,
+						),
 					}}
 				></pre>
 				<div class="terminal-details">

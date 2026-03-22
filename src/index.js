@@ -331,6 +331,12 @@ const normalizeJSON = (parsed) => {
                 }
                 else if (formatted !== "") {
                     result[key] = formatted;
+                    if (lowerType === "os" && item.result && item.result.id) {
+                        result["OS_ID"] = item.result.id;
+                        if (item.result.idLike) {
+                            result["OS_ID_LIKE"] = item.result.idLike;
+                        }
+                    }
                 }
             }
             else {
@@ -348,7 +354,7 @@ const normalizeJSON = (parsed) => {
 const FastfetchRenderer = ({ username, info, }) => {
     const keys = Object.keys(info);
     return (_jsx("div", { className: "terminal-block", children: _jsxs("div", { class: "terminal-body", children: [_jsx("pre", { class: "hide-on-mobile terminal-logo-box", dangerouslySetInnerHTML: {
-                        __html: getLogoForOS(info.OS || info.os || info.Os),
+                        __html: getLogoForOS(info.OS_ID || info.OS_ID_LIKE || info.OS || info.os || info.Os),
                     } }), _jsxs("div", { class: "terminal-details", children: [_jsx("div", { class: "terminal-host", children: _jsx("span", { children: info["User@Host"] || `${username}@fetchbook` }) }), _jsx("div", { class: "terminal-separator", children: "-------------------------" }), keys.map((key) => {
                             if (key === "User@Host")
                                 return null;
@@ -381,7 +387,11 @@ app.get("/", async (c) => {
                             borderRadius: "8px",
                             marginBottom: "2rem",
                             border: "1px solid #e9ecef",
-                        }, children: [_jsx("h3", { style: { margin: "0 0 12px 0", fontSize: "1rem" }, children: "\uD83D\uDCBB Your CLI Upload Command" }), _jsx("p", { style: { margin: "0 0 12px 0", fontSize: "0.9rem", color: "#666" }, children: "Run this command directly in your terminal to easily upload your setup. Keep it secret!" }), _jsxs("div", { style: { marginBottom: "16px" }, children: [_jsx("strong", { style: {
+                        }, children: [_jsx("h3", { style: { margin: "0 0 12px 0", fontSize: "1rem" }, children: "\uD83D\uDCBB Your CLI Upload Command" }), _jsx("p", { style: {
+                                    margin: "0 0 12px 0",
+                                    fontSize: "0.9rem",
+                                    color: "#666",
+                                }, children: "Run this command directly in your terminal to easily upload your setup. Keep it secret!" }), _jsxs("div", { style: { marginBottom: "16px" }, children: [_jsx("strong", { style: {
                                             fontSize: "0.85rem",
                                             color: "#555",
                                             display: "block",
