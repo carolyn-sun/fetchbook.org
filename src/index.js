@@ -399,23 +399,23 @@ app.get("/", async (c) => {
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     gap: "0.3rem",
-                                                }, children: [_jsx("label", { for: "ios-os", style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "OS Version" }), _jsx("input", { type: "text", id: "ios-os", class: "form-input", placeholder: "iOS 26.3.1 (23D8133)", style: { padding: "0.4rem" } })] }), _jsxs("div", { style: {
+                                                }, children: [_jsx("label", { style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "OS Version" }), _jsx("input", { type: "text", id: "ios-os", class: "form-input", placeholder: "iOS 26.3.1 (23D8133)", style: { padding: "0.4rem" } })] }), _jsxs("div", { style: {
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     gap: "0.3rem",
-                                                }, children: [_jsx("label", { for: "ios-model", style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "Device Model" }), _jsx("input", { type: "text", id: "ios-model", class: "form-input", placeholder: "iPhone 17", style: { padding: "0.4rem" } })] }), _jsxs("div", { style: {
+                                                }, children: [_jsx("label", { style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "Device Model" }), _jsx("input", { type: "text", id: "ios-model", class: "form-input", placeholder: "iPhone 17", style: { padding: "0.4rem" } })] }), _jsxs("div", { style: {
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     gap: "0.3rem",
-                                                }, children: [_jsx("label", { for: "ios-soc", style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "Processor (SoC)" }), _jsx("input", { type: "text", id: "ios-soc", class: "form-input", placeholder: "Apple A19", style: { padding: "0.4rem" } })] }), _jsxs("div", { style: {
+                                                }, children: [_jsx("label", { style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "Processor (SoC)" }), _jsx("input", { type: "text", id: "ios-soc", class: "form-input", placeholder: "Apple A19", style: { padding: "0.4rem" } })] }), _jsxs("div", { style: {
                                                     display: "flex",
                                                     flexDirection: "column",
                                                     gap: "0.3rem",
-                                                }, children: [_jsx("label", { for: "ios-cores", style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "Cores" }), _jsx("input", { type: "number", id: "ios-cores", class: "form-input", placeholder: "6", min: "1", style: { padding: "0.4rem" } })] })] }), _jsxs("div", { style: {
+                                                }, children: [_jsx("label", { style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "Cores" }), _jsx("input", { type: "number", id: "ios-cores", class: "form-input", placeholder: "6", style: { padding: "0.4rem" } })] })] }), _jsxs("div", { style: {
                                             display: "flex",
                                             flexDirection: "column",
                                             gap: "0.3rem",
-                                        }, children: [_jsx("label", { for: "ios-display-name", style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "Display Details" }), _jsxs("div", { style: {
+                                        }, children: [_jsx("label", { style: { fontSize: "0.85rem", fontWeight: "bold" }, children: "Display Details" }), _jsxs("div", { style: {
                                                     display: "flex",
                                                     gap: "0.5rem",
                                                     flexWrap: "wrap",
@@ -425,7 +425,7 @@ app.get("/", async (c) => {
                                                             gap: "0.5rem",
                                                             alignItems: "center",
                                                             flex: "1 1 200px",
-                                                        }, children: [_jsx("input", { type: "number", id: "ios-width", class: "form-input", placeholder: "1206", min: "1", style: { padding: "0.4rem", width: "100%" } }), _jsx("span", { style: { color: "#888", fontSize: "0.8rem" }, children: "W" }), _jsx("input", { type: "number", id: "ios-height", class: "form-input", placeholder: "2622", min: "1", style: { padding: "0.4rem", width: "100%" } }), _jsx("span", { style: { color: "#888", fontSize: "0.8rem" }, children: "H" }), _jsx("input", { type: "number", id: "ios-refresh", class: "form-input", placeholder: "120", min: "1", style: { padding: "0.4rem", width: "100%" } }), _jsx("span", { style: { color: "#888", fontSize: "0.8rem" }, children: "Hz" })] })] })] }), _jsx("div", { style: { marginTop: "0.5rem" }, children: _jsx("button", { type: "button", id: "generate-ios-json-btn", class: "secondary-btn", style: {
+                                                        }, children: [_jsx("input", { type: "number", id: "ios-width", class: "form-input", placeholder: "1206", style: { padding: "0.4rem", width: "100%" } }), _jsx("span", { style: { color: "#888", fontSize: "0.8rem" }, children: "W" }), _jsx("input", { type: "number", id: "ios-height", class: "form-input", placeholder: "2622", style: { padding: "0.4rem", width: "100%" } }), _jsx("span", { style: { color: "#888", fontSize: "0.8rem" }, children: "H" }), _jsx("input", { type: "number", id: "ios-refresh", class: "form-input", placeholder: "120", style: { padding: "0.4rem", width: "100%" } }), _jsx("span", { style: { color: "#888", fontSize: "0.8rem" }, children: "Hz" })] })] })] }), _jsx("div", { style: { marginTop: "0.5rem" }, children: _jsx("button", { type: "button", id: "generate-ios-json-btn", class: "secondary-btn", style: {
                                                 fontSize: "0.85rem",
                                                 width: "100%",
                                                 padding: "0.6rem",

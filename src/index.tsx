@@ -670,7 +670,6 @@ app.get("/", async (c) => {
 									id="ios-cores"
 									class="form-input"
 									placeholder="6"
-									min="1"
 									style={{ padding: "0.4rem" }}
 								/>
 							</div>
@@ -717,7 +716,6 @@ app.get("/", async (c) => {
 										id="ios-width"
 										class="form-input"
 										placeholder="1206"
-										min="1"
 										style={{ padding: "0.4rem", width: "100%" }}
 									/>
 									<span style={{ color: "#888", fontSize: "0.8rem" }}>W</span>
@@ -726,7 +724,6 @@ app.get("/", async (c) => {
 										id="ios-height"
 										class="form-input"
 										placeholder="2622"
-										min="1"
 										style={{ padding: "0.4rem", width: "100%" }}
 									/>
 									<span style={{ color: "#888", fontSize: "0.8rem" }}>H</span>
@@ -735,7 +732,6 @@ app.get("/", async (c) => {
 										id="ios-refresh"
 										class="form-input"
 										placeholder="120"
-										min="1"
 										style={{ padding: "0.4rem", width: "100%" }}
 									/>
 									<span style={{ color: "#888", fontSize: "0.8rem" }}>Hz</span>
