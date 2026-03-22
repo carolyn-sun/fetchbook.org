@@ -1260,6 +1260,10 @@ export const getLogoForOS = (os?: string) => {
 
 	if (LOGOS[lower]) return LOGOS[lower];
 
+	if (lower.includes("ios") || lower.includes("ipados")) {
+		return LOGOS.apple || "";
+	}
+
 	// Fuzzy fallback
 	const sortedKeys = Object.keys(LOGOS).sort((a, b) => b.length - a.length);
 	for (const key of sortedKeys) {
