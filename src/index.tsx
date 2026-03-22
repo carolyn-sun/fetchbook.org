@@ -1075,7 +1075,7 @@ app.get("/user/:username", async (c) => {
 											value={row.note || ""}
 											placeholder="Add a note..."
 											title="Edit note"
-											maxLength={30}
+											maxLength={100}
 											{...({
 												onchange:
 													"fetch(this.form.action, { method: 'POST', body: new URLSearchParams(new FormData(this.form)) }); this.blur();",
@@ -1238,7 +1238,7 @@ app.post("/api/device/:id/edit", async (c) => {
 	const body = await c.req.parseBody();
 
 	if (body.note !== undefined) {
-		const note = body.note ? String(body.note).slice(0, 30) : null;
+		const note = body.note ? String(body.note).slice(0, 100) : null;
 		await c.env.DB.prepare(
 			"UPDATE devices SET note = ? WHERE id = ? AND username = ?",
 		)
