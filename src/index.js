@@ -363,25 +363,70 @@ app.get("/", async (c) => {
     const user = c.get("user");
     const recentRes = await c.env.DB.prepare("SELECT username FROM devices WHERE is_public = 1 GROUP BY username ORDER BY MAX(created_at) DESC LIMIT 30").all();
     const recentUsers = (recentRes.results || []).map((r) => String(r.username));
-    const _origin = new URL(c.req.url).origin;
-    return c.html(_jsxs(Layout, { title: "fetchbook", user: user, children: [_jsxs("div", { style: { marginBottom: "3rem" }, children: [_jsx("h2", { children: "Upload Your Device" }), _jsxs("p", { children: ["Paste your", " ", _jsx("code", { children: _jsx("a", { href: "https://github.com/fastfetch-cli/fastfetch", children: "fastfetch" }) }), " ", "JSON below."] }), _jsx("p", { children: _jsx("code", { children: "fastfetch --format json" }) }), _jsxs("div", { style: {
-                            marginBottom: "2rem",
+    const origin = new URL(c.req.url).origin;
+    let cliToken = "";
+    let cliCommand = "";
+    let psCommand = "";
+    if (user) {
+        cliToken = await sign({
+            username: user.username,
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 10,
+        }, c.env.JWT_SECRET, "HS256");
+        cliCommand = `curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
+        psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json" } -Body $data`;
+    }
+    return c.html(_jsxs(Layout, { title: "fetchbook", user: user, children: [_jsxs("div", { style: { marginBottom: "3rem" }, children: [_jsx("h2", { children: "Upload Your Device" }), _jsxs("p", { style: { color: "#555", marginBottom: "1.5rem" }, children: ["You can upload your device configuration using the web interface or directly from your terminal. Both methods require", " ", _jsx("a", { href: "https://github.com/fastfetch-cli/fastfetch", target: "_blank", rel: "noopener", style: { color: "#000", fontWeight: "bold" }, children: "fastfetch" }), "."] }), user && (_jsxs("div", { style: {
                             background: "#f8f9fa",
-                            padding: "1rem",
+                            padding: "16px",
                             borderRadius: "8px",
+                            marginBottom: "2rem",
                             border: "1px solid #e9ecef",
-                            fontSize: "0.95rem",
-                            color: "#495057",
-                        }, children: [_jsx("strong", { style: { color: "#212529" }, children: "Uploading from a CLI-only environment?" }), _jsxs("div", { style: { marginTop: "0.5rem", fontSize: "0.85rem" }, children: [_jsx("span", { style: { color: "#666" }, children: "You can copy your unique " }), _jsx("a", { href: user ? `/user/${user.username}` : "/auth/github/login", style: {
-                                            color: "#000",
-                                            fontWeight: "bold",
-                                            textDecoration: "underline",
-                                        }, children: "CLI Token" }), _jsxs("span", { style: { color: "#666" }, children: [" ", "from your profile page after logging in."] })] })] }), _jsx("form", { action: "/api/web-upload", method: "post", style: {
+                        }, children: [_jsx("h3", { style: { margin: "0 0 12px 0", fontSize: "1rem" }, children: "\uD83D\uDCBB Your CLI Upload Command" }), _jsx("p", { style: { margin: "0 0 12px 0", fontSize: "0.9rem", color: "#666" }, children: "Run this command directly in your terminal to easily upload your setup. Keep it secret!" }), _jsxs("div", { style: { marginBottom: "16px" }, children: [_jsx("strong", { style: {
+                                            fontSize: "0.85rem",
+                                            color: "#555",
+                                            display: "block",
+                                            marginBottom: "8px",
+                                        }, children: "Linux / macOS (Bash/Zsh)" }), _jsxs("div", { style: { display: "flex", gap: "8px", alignItems: "center" }, children: [_jsxs("div", { className: "code-inline-box", style: {
+                                                    margin: 0,
+                                                    flex: 1,
+                                                    fontSize: "0.85rem",
+                                                    padding: "10px",
+                                                    borderRadius: "4px",
+                                                    border: "1px solid #ced4da",
+                                                    background: "#fff",
+                                                    whiteSpace: "pre-wrap",
+                                                    wordBreak: "break-all",
+                                                }, children: ["curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer", " ", _jsx("span", { class: "blur-hover", style: {
+                                                            filter: "blur(4px)",
+                                                            transition: "filter 0.2s",
+                                                            cursor: "pointer",
+                                                            background: "#eee",
+                                                        }, children: cliToken }), "' -d \"$(fastfetch --format json)\" \"", origin, "/api/upload\""] }), _jsx("button", { type: "button", class: "copy-token-btn primary-btn", "data-cmd": cliCommand, children: "Copy" })] })] }), _jsxs("div", { children: [_jsx("strong", { style: {
+                                            fontSize: "0.85rem",
+                                            color: "#555",
+                                            display: "block",
+                                            marginBottom: "8px",
+                                        }, children: "Windows (PowerShell)" }), _jsxs("div", { style: { display: "flex", gap: "8px", alignItems: "center" }, children: [_jsxs("div", { className: "code-inline-box", style: {
+                                                    margin: 0,
+                                                    flex: 1,
+                                                    fontSize: "0.85rem",
+                                                    padding: "10px",
+                                                    borderRadius: "4px",
+                                                    border: "1px solid #ced4da",
+                                                    background: "#fff",
+                                                    whiteSpace: "pre-wrap",
+                                                    wordBreak: "break-all",
+                                                }, children: ["[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri \"", origin, "/api/upload\" -Method Post -Headers @", "{", " Authorization = \"Bearer", " ", _jsx("span", { class: "blur-hover", style: {
+                                                            filter: "blur(4px)",
+                                                            transition: "filter 0.2s",
+                                                            cursor: "pointer",
+                                                            background: "#eee",
+                                                        }, children: cliToken }), "\"; \"Content-Type\" = \"application/json\" ", "}", " -Body $data"] }), _jsx("button", { type: "button", class: "copy-token-btn primary-btn", "data-cmd": psCommand, children: "Copy" })] })] })] })), _jsx("form", { action: "/api/web-upload", method: "post", style: {
                             background: "#f9f9f9",
                             padding: "1.5rem",
                             borderRadius: "8px",
                             border: "1px solid #eee",
-                        }, children: user ? (_jsxs(_Fragment, { children: [_jsxs("label", { class: "form-group", children: [_jsx("strong", { class: "form-label-title", children: "Device Info (JSON ONLY)" }), _jsx("textarea", { name: "device_info", class: "form-textarea", rows: 6, required: true, placeholder: "Paste raw fastfetch JSON output..." })] }), _jsxs("label", { class: "form-checkbox-group", children: [_jsx("input", { type: "checkbox", name: "is_public", value: "1", checked: true, style: { width: "auto", margin: 0 } }), _jsx("span", { style: { margin: 0 }, children: "Make this public on my fetchbook" })] }), _jsx("button", { type: "submit", class: "primary-btn", children: "Publish to fetchbook" })] })) : (_jsx("div", { style: {
+                        }, children: user ? (_jsxs(_Fragment, { children: [_jsx("h3", { style: { margin: "0 0 16px 0", fontSize: "1rem" }, children: "\uD83C\uDF10 Upload via Web" }), _jsxs("label", { class: "form-group", children: [_jsx("strong", { class: "form-label-title", children: "Device Info (JSON ONLY)" }), _jsx("textarea", { name: "device_info", class: "form-textarea", rows: 6, required: true, placeholder: "Paste raw fastfetch JSON output..." })] }), _jsxs("label", { class: "form-checkbox-group", children: [_jsx("input", { type: "checkbox", name: "is_public", value: "1", checked: true, style: { width: "auto", margin: 0 } }), _jsx("span", { style: { margin: 0 }, children: "Make this public on my fetchbook" })] }), _jsx("button", { type: "submit", class: "primary-btn", children: "Publish to fetchbook" })] })) : (_jsx("div", { style: {
                                 padding: "1rem",
                                 background: "#fff3cd",
                                 color: "#856404",
@@ -557,63 +602,7 @@ app.get("/user/:username", async (c) => {
                 }, children: [_jsx("h2", { children: "404 - User Not Found" }), _jsx("p", { style: { color: "#666" }, children: "This user does not exist or has no public devices." })] }) }), 404);
     }
     const origin = new URL(c.req.url).origin;
-    let cliToken = "";
-    if (isOwner) {
-        // Generate a long-lived JWT for CLI usage (10 years)
-        cliToken = await sign({
-            username,
-            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 10,
-        }, c.env.JWT_SECRET, "HS256");
-    }
-    const cliCommand = `curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
-    const psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json" } -Body $data`;
-    return c.html(_jsxs(Layout, { title: `${username}'s fetchbook`, user: user, children: [_jsxs("h2", { children: [username, "'s fetchbook"] }), isOwner && (_jsxs("div", { style: {
-                    background: "#f8f9fa",
-                    padding: "16px",
-                    borderRadius: "8px",
-                    marginBottom: "2rem",
-                    border: "1px solid #e9ecef",
-                }, children: [_jsx("h3", { style: { margin: "0 0 12px 0", fontSize: "1rem" }, children: "\uD83D\uDCBB Your CLI Upload Command" }), _jsx("p", { style: { margin: "0 0 12px 0", fontSize: "0.9rem", color: "#666" }, children: "Run this command directly in your terminal to upload a new setup. Keep it secret!" }), _jsxs("div", { style: { marginBottom: "16px" }, children: [_jsx("strong", { style: {
-                                    fontSize: "0.85rem",
-                                    color: "#555",
-                                    display: "block",
-                                    marginBottom: "8px",
-                                }, children: "Linux / macOS (Bash/Zsh)" }), _jsxs("div", { style: { display: "flex", gap: "8px", alignItems: "center" }, children: [_jsxs("div", { className: "code-inline-box", style: {
-                                            margin: 0,
-                                            flex: 1,
-                                            fontSize: "0.85rem",
-                                            padding: "10px",
-                                            borderRadius: "4px",
-                                            border: "1px solid #ced4da",
-                                            background: "#fff",
-                                            whiteSpace: "pre-wrap",
-                                            wordBreak: "break-all",
-                                        }, children: ["curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer", " ", _jsx("span", { class: "blur-hover", style: {
-                                                    filter: "blur(4px)",
-                                                    transition: "filter 0.2s",
-                                                    cursor: "pointer",
-                                                    background: "#eee",
-                                                }, children: cliToken }), "' -d \"$(fastfetch --format json)\" \"", origin, "/api/upload\""] }), _jsx("button", { type: "button", class: "copy-token-btn primary-btn", "data-cmd": cliCommand, children: "Copy" })] })] }), _jsxs("div", { children: [_jsx("strong", { style: {
-                                    fontSize: "0.85rem",
-                                    color: "#555",
-                                    display: "block",
-                                    marginBottom: "8px",
-                                }, children: "Windows (PowerShell)" }), _jsxs("div", { style: { display: "flex", gap: "8px", alignItems: "center" }, children: [_jsxs("div", { className: "code-inline-box", style: {
-                                            margin: 0,
-                                            flex: 1,
-                                            fontSize: "0.85rem",
-                                            padding: "10px",
-                                            borderRadius: "4px",
-                                            border: "1px solid #ced4da",
-                                            background: "#fff",
-                                            whiteSpace: "pre-wrap",
-                                            wordBreak: "break-all",
-                                        }, children: ["[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri \"", origin, "/api/upload\" -Method Post -Headers @", "{", " Authorization = \"Bearer", " ", _jsx("span", { class: "blur-hover", style: {
-                                                    filter: "blur(4px)",
-                                                    transition: "filter 0.2s",
-                                                    cursor: "pointer",
-                                                    background: "#eee",
-                                                }, children: cliToken }), "\"; \"Content-Type\" = \"application/json\" ", "}", " -Body $data"] }), _jsx("button", { type: "button", class: "copy-token-btn primary-btn", "data-cmd": psCommand, children: "Copy" })] })] })] })), _jsxs("div", { style: {
+    return c.html(_jsxs(Layout, { title: `${username}'s fetchbook`, user: user, children: [_jsxs("h2", { children: [username, "'s fetchbook"] }), _jsxs("div", { style: {
                     marginBottom: "2rem",
                     display: "flex",
                     gap: "8px",

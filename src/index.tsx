@@ -497,55 +497,174 @@ app.get("/", async (c) => {
 		String(r.username),
 	);
 
-	const _origin = new URL(c.req.url).origin;
+	const origin = new URL(c.req.url).origin;
+
+	let cliToken = "";
+	let cliCommand = "";
+	let psCommand = "";
+	if (user) {
+		cliToken = await sign(
+			{
+				username: user.username,
+				exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 10,
+			},
+			c.env.JWT_SECRET,
+			"HS256",
+		);
+		cliCommand = `curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
+		psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json" } -Body $data`;
+	}
 
 	return c.html(
 		<Layout title="fetchbook" user={user}>
 			<div style={{ marginBottom: "3rem" }}>
 				<h2>Upload Your Device</h2>
-				<p>
-					Paste your{" "}
-					<code>
-						<a href="https://github.com/fastfetch-cli/fastfetch">fastfetch</a>
-					</code>{" "}
-					JSON below.
-				</p>
-				<p>
-					<code>fastfetch --format json</code>
+				<p style={{ color: "#555", marginBottom: "1.5rem" }}>
+					You can upload your device configuration using the web interface or
+					directly from your terminal. Both methods require{" "}
+					<a
+						href="https://github.com/fastfetch-cli/fastfetch"
+						target="_blank"
+						rel="noopener"
+						style={{ color: "#000", fontWeight: "bold" }}
+					>
+						fastfetch
+					</a>
+					.
 				</p>
 
-				<div
-					style={{
-						marginBottom: "2rem",
-						background: "#f8f9fa",
-						padding: "1rem",
-						borderRadius: "8px",
-						border: "1px solid #e9ecef",
-						fontSize: "0.95rem",
-						color: "#495057",
-					}}
-				>
-					<strong style={{ color: "#212529" }}>
-						Uploading from a CLI-only environment?
-					</strong>
-					<div style={{ marginTop: "0.5rem", fontSize: "0.85rem" }}>
-						<span style={{ color: "#666" }}>You can copy your unique </span>
-						<a
-							href={user ? `/user/${user.username}` : "/auth/github/login"}
+				{user && (
+					<div
+						style={{
+							background: "#f8f9fa",
+							padding: "16px",
+							borderRadius: "8px",
+							marginBottom: "2rem",
+							border: "1px solid #e9ecef",
+						}}
+					>
+						<h3 style={{ margin: "0 0 12px 0", fontSize: "1rem" }}>
+							💻 Your CLI Upload Command
+						</h3>
+						<p
 							style={{
-								color: "#000",
-								fontWeight: "bold",
-								textDecoration: "underline",
+								margin: "0 0 12px 0",
+								fontSize: "0.9rem",
+								color: "#666",
 							}}
 						>
-							CLI Token
-						</a>
-						<span style={{ color: "#666" }}>
-							{" "}
-							from your profile page after logging in.
-						</span>
+							Run this command directly in your terminal to easily upload your
+							setup. Keep it secret!
+						</p>
+						<div style={{ marginBottom: "16px" }}>
+							<strong
+								style={{
+									fontSize: "0.85rem",
+									color: "#555",
+									display: "block",
+									marginBottom: "8px",
+								}}
+							>
+								Linux / macOS (Bash/Zsh)
+							</strong>
+							<div
+								style={{ display: "flex", gap: "8px", alignItems: "center" }}
+							>
+								<div
+									className="code-inline-box"
+									style={{
+										margin: 0,
+										flex: 1,
+										fontSize: "0.85rem",
+										padding: "10px",
+										borderRadius: "4px",
+										border: "1px solid #ced4da",
+										background: "#fff",
+										whiteSpace: "pre-wrap",
+										wordBreak: "break-all",
+									}}
+								>
+									curl -X POST -H 'Content-Type: application/json' -H
+									'Authorization: Bearer{" "}
+									<span
+										class="blur-hover"
+										style={{
+											filter: "blur(4px)",
+											transition: "filter 0.2s",
+											cursor: "pointer",
+											background: "#eee",
+										}}
+									>
+										{cliToken}
+									</span>
+									' -d "$(fastfetch --format json)" "{origin}/api/upload"
+								</div>
+								<button
+									type="button"
+									class="copy-token-btn primary-btn"
+									data-cmd={cliCommand}
+								>
+									Copy
+								</button>
+							</div>
+						</div>
+
+						<div>
+							<strong
+								style={{
+									fontSize: "0.85rem",
+									color: "#555",
+									display: "block",
+									marginBottom: "8px",
+								}}
+							>
+								Windows (PowerShell)
+							</strong>
+							<div
+								style={{ display: "flex", gap: "8px", alignItems: "center" }}
+							>
+								<div
+									className="code-inline-box"
+									style={{
+										margin: 0,
+										flex: 1,
+										fontSize: "0.85rem",
+										padding: "10px",
+										borderRadius: "4px",
+										border: "1px solid #ced4da",
+										background: "#fff",
+										whiteSpace: "pre-wrap",
+										wordBreak: "break-all",
+									}}
+								>
+									[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;
+									$data = fastfetch --format json | Out-String;
+									Invoke-RestMethod -Uri "{origin}/api/upload" -Method Post
+									-Headers @{"{"} Authorization = "Bearer{" "}
+									<span
+										class="blur-hover"
+										style={{
+											filter: "blur(4px)",
+											transition: "filter 0.2s",
+											cursor: "pointer",
+											background: "#eee",
+										}}
+									>
+										{cliToken}
+									</span>
+									"; "Content-Type" = "application/json" {"}"} -Body $data
+								</div>
+								<button
+									type="button"
+									class="copy-token-btn primary-btn"
+									data-cmd={psCommand}
+								>
+									Copy
+								</button>
+							</div>
+						</div>
 					</div>
-				</div>
+				)}
 
 				<form
 					action="/api/web-upload"
@@ -559,6 +678,9 @@ app.get("/", async (c) => {
 				>
 					{user ? (
 						<>
+							<h3 style={{ margin: "0 0 16px 0", fontSize: "1rem" }}>
+								🌐 Upload via Web
+							</h3>
 							<label class="form-group">
 								<strong class="form-label-title">
 									Device Info (JSON ONLY)
@@ -882,150 +1004,10 @@ app.get("/user/:username", async (c) => {
 	}
 
 	const origin = new URL(c.req.url).origin;
-	let cliToken = "";
-	if (isOwner) {
-		// Generate a long-lived JWT for CLI usage (10 years)
-		cliToken = await sign(
-			{
-				username,
-				exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 10,
-			},
-			c.env.JWT_SECRET,
-			"HS256",
-		);
-	}
-
-	const cliCommand = `curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
-	const psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json" } -Body $data`;
 
 	return c.html(
 		<Layout title={`${username}'s fetchbook`} user={user}>
 			<h2>{username}'s fetchbook</h2>
-
-			{isOwner && (
-				<div
-					style={{
-						background: "#f8f9fa",
-						padding: "16px",
-						borderRadius: "8px",
-						marginBottom: "2rem",
-						border: "1px solid #e9ecef",
-					}}
-				>
-					<h3 style={{ margin: "0 0 12px 0", fontSize: "1rem" }}>
-						💻 Your CLI Upload Command
-					</h3>
-					<p
-						style={{ margin: "0 0 12px 0", fontSize: "0.9rem", color: "#666" }}
-					>
-						Run this command directly in your terminal to upload a new setup.
-						Keep it secret!
-					</p>
-					<div style={{ marginBottom: "16px" }}>
-						<strong
-							style={{
-								fontSize: "0.85rem",
-								color: "#555",
-								display: "block",
-								marginBottom: "8px",
-							}}
-						>
-							Linux / macOS (Bash/Zsh)
-						</strong>
-						<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-							<div
-								className="code-inline-box"
-								style={{
-									margin: 0,
-									flex: 1,
-									fontSize: "0.85rem",
-									padding: "10px",
-									borderRadius: "4px",
-									border: "1px solid #ced4da",
-									background: "#fff",
-									whiteSpace: "pre-wrap",
-									wordBreak: "break-all",
-								}}
-							>
-								curl -X POST -H 'Content-Type: application/json' -H
-								'Authorization: Bearer{" "}
-								<span
-									class="blur-hover"
-									style={{
-										filter: "blur(4px)",
-										transition: "filter 0.2s",
-										cursor: "pointer",
-										background: "#eee",
-									}}
-								>
-									{cliToken}
-								</span>
-								' -d "$(fastfetch --format json)" "{origin}/api/upload"
-							</div>
-							<button
-								type="button"
-								class="copy-token-btn primary-btn"
-								data-cmd={cliCommand}
-							>
-								Copy
-							</button>
-						</div>
-					</div>
-
-					<div>
-						<strong
-							style={{
-								fontSize: "0.85rem",
-								color: "#555",
-								display: "block",
-								marginBottom: "8px",
-							}}
-						>
-							Windows (PowerShell)
-						</strong>
-						<div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-							<div
-								className="code-inline-box"
-								style={{
-									margin: 0,
-									flex: 1,
-									fontSize: "0.85rem",
-									padding: "10px",
-									borderRadius: "4px",
-									border: "1px solid #ced4da",
-									background: "#fff",
-									whiteSpace: "pre-wrap",
-									wordBreak: "break-all",
-								}}
-							>
-								[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data
-								= fastfetch --format json | Out-String; Invoke-RestMethod -Uri "
-								{origin}/api/upload" -Method Post -Headers @{"{"} Authorization
-								= "Bearer{" "}
-								<span
-									class="blur-hover"
-									style={{
-										filter: "blur(4px)",
-										transition: "filter 0.2s",
-										cursor: "pointer",
-										background: "#eee",
-									}}
-								>
-									{cliToken}
-								</span>
-								"; "Content-Type" = "application/json" {"}"} -Body $data
-							</div>
-							<button
-								type="button"
-								class="copy-token-btn primary-btn"
-								data-cmd={psCommand}
-							>
-								Copy
-							</button>
-						</div>
-					</div>
-				</div>
-			)}
 
 			<div
 				style={{
