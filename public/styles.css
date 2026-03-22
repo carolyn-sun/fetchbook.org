@@ -86,12 +86,12 @@ pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; 
   flex-wrap: wrap;
   gap: 12px;
 }
-.card-note-form { margin: 0; }
+.card-note-form { margin: 0; flex: 1 1 500px; max-width: 100%; min-width: 200px; }
 .card-note-input {
   color: #333; font-size: 1rem; font-weight: bold;
   background: #fff; border: 1px solid #ccc;
   border-radius: 4px; padding: 4px 8px;
-  margin: 0; font-family: inherit; width: 500px; max-width: 100%;
+  margin: 0; font-family: inherit; width: 100%; box-sizing: border-box;
 }
 .card-note-title { margin: 0; color: #333; font-size: 1.1rem; }
 .card-meta-row { display: flex; align-items: center; gap: 10px; }
