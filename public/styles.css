@@ -83,10 +83,10 @@ pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; 
   display: flex;
   flex-direction: row;
   align-items: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 12px;
 }
-.card-note-form { margin: 0; flex: 1 1 500px; max-width: 100%; min-width: 200px; }
+.card-note-form { margin: 0; flex: 1 1 500px; max-width: 100%; min-width: 80px; }
 .card-note-input {
   color: #333; font-size: 1rem; font-weight: bold;
   background: #fff; border: 1px solid #ccc;
