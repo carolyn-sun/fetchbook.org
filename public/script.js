@@ -35,10 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return el && el.value.trim() !== '' ? el.value.trim() : def;
       };
       
-      const width = parseInt(val('ios-width', '1206'), 10);
-      const height = parseInt(val('ios-height', '2622'), 10);
-      const refresh = parseInt(val('ios-refresh', '120'), 10);
-      const cores = parseInt(val('ios-cores', '6'), 10);
+      const width = Math.max(1, parseInt(val('ios-width', '1206'), 10) || 1206);
+      const height = Math.max(1, parseInt(val('ios-height', '2622'), 10) || 2622);
+      const refresh = Math.max(1, parseInt(val('ios-refresh', '120'), 10) || 120);
+      const cores = Math.max(1, parseInt(val('ios-cores', '6'), 10) || 6);
       const soc = val('ios-soc', 'Apple A19');
 
       const json = [
