@@ -332,9 +332,9 @@ const normalizeJSON = (parsed) => {
                 else if (formatted !== "") {
                     result[key] = formatted;
                     if (lowerType === "os" && item.result && item.result.id) {
-                        result["OS_ID"] = item.result.id;
+                        result.OS_ID = item.result.id;
                         if (item.result.idLike) {
-                            result["OS_ID_LIKE"] = item.result.idLike;
+                            result.OS_ID_LIKE = item.result.idLike;
                         }
                     }
                 }
@@ -431,7 +431,7 @@ app.get("/", async (c) => {
                                                             transition: "filter 0.2s",
                                                             cursor: "pointer",
                                                             background: "#eee",
-                                                        }, children: cliToken }), "\"; \"Content-Type\" = \"application/json\" ", "}", " -Body $data"] }), _jsx("button", { type: "button", class: "copy-token-btn primary-btn", "data-cmd": psCommand, children: "Copy" })] })] })] })), _jsx("form", { action: "/api/web-upload", method: "post", style: {
+                                                        }, children: cliToken }), "\"; \"Content-Type\" = \"application/json\" ", "}", " -Body $data"] }), _jsx("button", { type: "button", class: "copy-token-btn primary-btn", "data-cmd": psCommand, children: "Copy" })] }), _jsx("div", { style: { fontSize: "0.8rem", color: "#666", marginTop: "8px" }, children: "\u26A0\uFE0F You may need to manually verify the JSON output on Windows platforms if it contains non-ASCII characters." })] })] })), _jsx("form", { action: "/api/web-upload", method: "post", style: {
                             background: "#f9f9f9",
                             padding: "1.5rem",
                             borderRadius: "8px",

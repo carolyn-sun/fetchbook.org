@@ -432,9 +432,9 @@ const normalizeJSON = (parsed: any): Record<string, string> => {
 				} else if (formatted !== "") {
 					result[key] = formatted as string;
 					if (lowerType === "os" && item.result && item.result.id) {
-						result["OS_ID"] = item.result.id;
+						result.OS_ID = item.result.id;
 						if (item.result.idLike) {
-							result["OS_ID_LIKE"] = item.result.idLike;
+							result.OS_ID_LIKE = item.result.idLike;
 						}
 					}
 				}
@@ -669,6 +669,13 @@ app.get("/", async (c) => {
 								>
 									Copy
 								</button>
+							</div>
+							<div
+								style={{ fontSize: "0.8rem", color: "#666", marginTop: "8px" }}
+							>
+								⚠️ You may need to manually verify the JSON output on Windows
+								platforms if it contains non-ASCII characters, e.g. Chinese,
+								Japanese, Korean, etc.
 							</div>
 						</div>
 					</div>
