@@ -60,13 +60,10 @@ const origin = Astro.url.origin;
 				class="share-link-box"
 				style="margin: 0; background: #f9f9f9; border: 1px solid #ddd; color: #666; width: 100%; max-width: 500px; font-size: 0.85rem; padding: 6px 12px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; display: flex; align-items: center;"
 			>{`${origin}/user/${username}`}</div>
-			<button type="button" id="copy-btn" class="secondary-btn" style="margin: 0; display: flex; align-items: center; justify-content: center; height: auto;">
-				Copy
-			</button>
 		</div>
 
 		{hasOtherUsers && (
-			<div style="margin-bottom: 2rem; display: flex; gap: 8px; align-items: center;">
+			<div style="margin-bottom: 2rem; display: flex; justify-content: center; align-items: center;">
 				<a href={`/random?exclude=${username}`} class="primary-btn">
 					Explore a random fetchbook ✨
 				</a>
