@@ -151,6 +151,35 @@ if (user) {
 				</div>
 			)}
 		</form>
+
+		<script>
+			// Allow drag & drop of fastfetch json files directly into the textarea!
+			const textarea = document.querySelector('textarea[name="device_info"]') as HTMLTextAreaElement;
+			if (textarea) {
+				textarea.addEventListener('dragover', (e) => {
+					e.preventDefault();
+					textarea.style.border = '2px dashed #007bff';
+				});
+				textarea.addEventListener('dragleave', (e) => {
+					e.preventDefault();
+					textarea.style.border = '1px solid #ccc';
+				});
+				textarea.addEventListener('drop', (e) => {
+					e.preventDefault();
+					textarea.style.border = '1px solid #ccc';
+					const file = e.dataTransfer?.files[0];
+					if (file) {
+						const reader = new FileReader();
+						reader.onload = (event) => {
+							if (event.target?.result) {
+								textarea.value = event.target.result as string;
+							}
+						};
+						reader.readAsText(file);
+					}
+				});
+			}
+		</script>
 	</div>
 
 	{recentUsers.length > 0 && (
