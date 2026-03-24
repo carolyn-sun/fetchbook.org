@@ -53,13 +53,12 @@ const origin = Astro.url.origin;
 	<Layout title={`${username}'s fetchbook`}>
 		<h2>{username}'s fetchbook</h2>
 
-		<div style="margin-bottom: 2rem; display: flex; gap: 8px; align-items: stretch;">
-			<strong style="color: #333; font-size: 0.95rem; display: flex; align-items: center;">Share</strong>
+		<div style="margin-bottom: 2rem; display: flex; align-items: stretch;">
 			<div
 				id="share-link"
 				class="share-link-box"
 				style="margin: 0; background: #f9f9f9; border: 1px solid #ddd; color: #666; width: 100%; max-width: 500px; font-size: 0.85rem; padding: 6px 12px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; display: flex; align-items: center;"
-			>{`${origin}/user/${username}`}</div>
+			>{`${origin.replace(/^https?:\/\//, '')}/user/${username}`}</div>
 		</div>
 
 		{hasOtherUsers && (
