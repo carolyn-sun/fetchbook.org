@@ -1,0 +1,111 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const user = Astro.locals.user;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="color-scheme" content="light dark" />
+		<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+		<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
+		<title>{title} - fetchbook.org</title>
+		{/* Include styles mapping to the public dir */}
+		<link rel="stylesheet" href="/styles.css" />
+		<link rel="stylesheet" href="/terminal.css" />
+		<script is:inline src="/script.js" defer></script>
+	</head>
+	<body>
+		<div id="root">
+			<div
+				style={{
+					display: "flex",
+					justifyContent: "space-between",
+					alignItems: "center",
+					flexWrap: "wrap",
+					gap: "1rem",
+					borderBottom: "1px solid #eee",
+					paddingBottom: "1rem",
+					marginBottom: "2rem",
+				}}
+			>
+				<h1 style={{ margin: 0 }}>
+					<a href="/" style={{ textDecoration: "none", color: "inherit" }}>
+						fetchbook.org
+					</a>
+				</h1>
+				<div
+					style={{
+						display: "flex",
+						alignItems: "center",
+						flexWrap: "wrap",
+						gap: "10px",
+					}}
+				>
+					{user ? (
+						<span
+							style={{
+								fontSize: "0.9rem",
+								color: "#666",
+								display: "flex",
+								alignItems: "center",
+								flexWrap: "wrap",
+								gap: "10px",
+							}}
+						>
+							<a href={`/user/${user.username}`} class="secondary-btn">
+								my fetchbook
+							</a>
+							<span>
+								Logged in as <strong>{user.username}</strong> |{" "}
+								<a
+									href="/auth/logout"
+									style={{ color: "#666", textDecoration: "underline" }}
+								>
+									Logout
+								</a>
+							</span>
+						</span>
+					) : (
+						<a href="/auth/github/login" class="primary-btn">
+							Login with GitHub
+						</a>
+					)}
+				</div>
+			</div>
+			<slot />
+			<footer
+				style={{
+					marginTop: "4rem",
+					paddingTop: "2rem",
+					borderTop: "1px solid #eee",
+					color: "#888",
+					fontSize: "0.85rem",
+					textAlign: "center",
+				}}
+			>
+				fetchbook.org ·{" "}
+				<a
+					href="https://github.com/carolyn-sun/fetchbook.org"
+					target="_blank"
+					style={{ color: "#888", textDecoration: "underline" }}
+					rel="noopener"
+				>
+					carolyn-sun/fetchbook.org
+				</a>{" "}
+				·{" "}
+				<a
+					href="/privacy"
+					style={{ color: "#888", textDecoration: "underline" }}
+				>
+					Privacy & Data Rights
+				</a>
+			</footer>
+		</div>
+	</body>
+</html>

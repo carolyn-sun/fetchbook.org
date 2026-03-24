@@ -1,13 +1,12 @@
 {
+	"extends": "astro/tsconfigs/strict",
 	"compilerOptions": {
-		"target": "ESNext",
-		"module": "ESNext",
-		"moduleResolution": "Bundler",
+		"types": ["@cloudflare/workers-types"],
+		"jsx": "preserve",
 		"strict": true,
 		"skipLibCheck": true,
-		"lib": ["ESNext"],
-		"types": ["@cloudflare/workers-types", "hono"],
-		"jsx": "react-jsx",
-		"jsxImportSource": "hono/jsx"
+		"moduleResolution": "Bundler",
+		"target": "ESNext",
+		"module": "ESNext"
 	}
 }

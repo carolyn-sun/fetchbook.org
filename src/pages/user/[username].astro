@@ -1,0 +1,198 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import FastfetchRender from '../../components/FastfetchRender.astro';
+import { normalizeJSON } from '../../utils/fastfetch';
+
+const { username } = Astro.params;
+const user = Astro.locals.user;
+import { typedEnv as env } from "../../utils/env";
+
+let results: any[] = [];
+const isOwner = user && user.username === username;
+
+const otherRes = await env.DB.prepare(
+	"SELECT username FROM devices WHERE is_public = 1 AND username != ? LIMIT 1",
+)
+	.bind(username)
+	.all();
+const hasOtherUsers = otherRes.results && otherRes.results.length > 0;
+
+if (isOwner) {
+	const res = await env.DB.prepare(
+		"SELECT * FROM devices WHERE username = ? ORDER BY sort_order DESC, created_at DESC, id DESC",
+	)
+		.bind(username)
+		.all();
+	results = res.results;
+} else {
+	const res = await env.DB.prepare(
+		"SELECT * FROM devices WHERE username = ? AND is_public = 1 ORDER BY sort_order DESC, created_at DESC, id DESC",
+	)
+		.bind(username)
+		.all();
+	results = res.results;
+}
+
+if (!isOwner && results.length === 0) {
+	Astro.response.status = 404;
+}
+
+const origin = Astro.url.origin;
+---
+
+{!isOwner && results.length === 0 ? (
+	<Layout title="Not Found">
+		<div style="text-align: center; margin-top: 4rem; margin-bottom: 4rem;">
+			<h2>404 - User Not Found</h2>
+			<p style="color: #666;">
+				This user does not exist or has no public devices.
+			</p>
+		</div>
+	</Layout>
+) : (
+	<Layout title={`${username}'s fetchbook`}>
+		<h2>{username}'s fetchbook</h2>
+
+		<div style="margin-bottom: 2rem; display: flex; gap: 8px; align-items: center;">
+			<strong style="color: #333; font-size: 0.95rem;">Share</strong>
+			<div
+				id="share-link"
+				class="share-link-box"
+				style="margin: 0; background: #f9f9f9; border: 1px solid #ddd; color: #666; width: 100%; max-width: 500px; font-size: 0.9rem; padding: 8px; border-radius: 4px; white-space: pre-wrap; word-break: break-all;"
+			>{`${origin}/user/${username}`}</div>
+			<button type="button" id="copy-btn" class="secondary-btn">
+				Copy
+			</button>
+		</div>
+		
+		{results.length === 0 ? (
+			<p>No devices found or they are private.</p>
+		) : (
+			results.map((row: any) => (
+				<div class="card">
+					<div class="card-header-row">
+						<div class="card-header-left">
+							{isOwner ? (
+								<form
+									method="post"
+									action={`/api/device/${row.id}/edit`}
+									class="card-note-form"
+									onsubmit={"return false;"}
+								>
+									<input
+										type="text"
+										name="note"
+										value={row.note || ""}
+										placeholder="Add a note..."
+										title="Edit note"
+										maxlength="32"
+										onchange={`const f = this.form; if(f) fetch(f.action, { method: 'POST', body: new URLSearchParams(new FormData(f)) }).finally(() => this.blur());`}
+										class="card-note-input"
+									/>
+								</form>
+							) : row.note ? (
+								<h3 class="card-note-title">{row.note}</h3>
+							) : null}
+
+							{isOwner && (
+								<div class="card-meta-row">
+									{row.is_public ? (
+										<span class="badge badge-public">🌐 Public</span>
+									) : (
+										<span class="badge badge-private">🔒 Private</span>
+									)}
+								</div>
+							)}
+						</div>
+
+						{isOwner && (
+							<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+								<form
+									method="post"
+									action={`/api/device/${row.id}/edit`}
+									style="margin: 0; display: flex; gap: 4px;"
+									onsubmit={"return false;"}
+								>
+									<button
+										type="button"
+										title="Move Up"
+										onclick={`fetch(this.form?.action || '', { method: 'POST', body: new URLSearchParams({ action: 'up' }) }).then(() => { const c = this.closest('.card'); const p = c?.previousElementSibling; if (p?.classList.contains('card')) c?.parentNode?.insertBefore(c, p); });`}
+										class="secondary-btn"
+									>
+										↑
+									</button>
+									<button
+										type="button"
+										title="Move Down"
+										onclick={`fetch(this.form?.action || '', { method: 'POST', body: new URLSearchParams({ action: 'down' }) }).then(() => { const c = this.closest('.card'); const n = c?.nextElementSibling; if (n?.classList.contains('card')) c?.parentNode?.insertBefore(n, c); });`}
+										class="secondary-btn"
+									>
+										↓
+									</button>
+								</form>
+								<form
+									method="post"
+									action={`/api/device/${row.id}/visibility`}
+									style="margin: 0;"
+									onsubmit={"return false;"}
+								>
+									<input
+										type="hidden"
+										name="is_public"
+										value={row.is_public ? "0" : "1"}
+									/>
+									<button
+										type="button"
+										onclick={`fetch(this.form?.action || '', { method: 'POST', body: new URLSearchParams(new FormData(this.form)) }).then(() => window.location.reload());`}
+										class="secondary-btn"
+									>
+										{row.is_public ? "Make Private" : "Make Public"}
+									</button>
+								</form>
+								<form
+									method="post"
+									action={`/api/device/${row.id}/delete`}
+									style="margin: 0;"
+									onsubmit={"return false;"}
+								>
+									<button
+										type="button"
+										onclick={`const t = this; if(t.dataset.confirm !== '1') { t.dataset.confirm = '1'; t.innerHTML = 'Confirm'; setTimeout(() => { t.dataset.confirm = '0'; t.innerHTML = 'Delete'; }, 3000); } else { fetch(t.form?.action || '', { method: 'POST' }).then(() => t.closest('.card')?.remove()); }`}
+										class="danger-btn"
+									>
+										Delete
+									</button>
+								</form>
+							</div>
+						)}
+					</div>
+					<div class="terminal-container">
+						<FastfetchRender
+							username={row.username}
+							info={
+								row.raw_device_info
+									? normalizeJSON(JSON.parse(row.raw_device_info))
+									: JSON.parse(row.device_info)
+							}
+						/>
+						<div class="card-time-wrapper">
+							<span class="card-time">
+								<time datetime={`${row.created_at.replace(" ", "T")}Z`}>
+									Uploaded at {row.created_at.slice(0, 16)} UTC
+								</time>
+							</span>
+						</div>
+					</div>
+				</div>
+			))
+		)}
+		
+		{hasOtherUsers && (
+			<div style="text-align: center; margin-top: 4rem; margin-bottom: 2rem;">
+				<a href={`/random?exclude=${username}`} class="primary-btn">
+					Explore a random fetchbook ✨
+				</a>
+			</div>
+		)}
+	</Layout>
+)}
