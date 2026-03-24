@@ -53,6 +53,7 @@ export const GET: APIRoute = async ({ url, redirect, cookies }) => {
 		secure: url.protocol === "https:",
 		path: "/",
 		maxAge: 60 * 60 * 24 * 7,
+		sameSite: "lax",
 	});
 
 	return redirect("/");
