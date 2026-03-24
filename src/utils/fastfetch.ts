@@ -51,7 +51,7 @@ export const sanitizeDeviceInfo = (info: any): any => {
 				.filter((item) => item !== undefined);
 		}
 
-		const result: any = {};
+		const result: any = Object.create(null);
 		for (const key of Object.keys(value)) {
 			const sanitized = sanitize(value[key], key);
 			if (sanitized !== undefined) {
