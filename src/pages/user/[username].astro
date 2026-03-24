@@ -64,6 +64,14 @@ const origin = Astro.url.origin;
 				Copy
 			</button>
 		</div>
+
+		{hasOtherUsers && (
+			<div style="margin-bottom: 2rem; display: flex; gap: 8px; align-items: center;">
+				<a href={`/random?exclude=${username}`} class="primary-btn">
+					Explore a random fetchbook ✨
+				</a>
+			</div>
+		)}
 		
 		{results.length === 0 ? (
 			<p>No devices found or they are private.</p>
