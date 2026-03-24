@@ -1086,13 +1086,15 @@ app.get("/user/:username", async (c) => {
 									<h3 class="card-note-title">{row.note}</h3>
 								) : null}
 
-								<div class="card-meta-row">
-									{row.is_public ? (
-										<span class="badge badge-public">🌐 Public</span>
-									) : (
-										<span class="badge badge-private">🔒 Private</span>
-									)}
-								</div>
+								{isOwner && (
+									<div class="card-meta-row">
+										{row.is_public ? (
+											<span class="badge badge-public">🌐 Public</span>
+										) : (
+											<span class="badge badge-private">🔒 Private</span>
+										)}
+									</div>
+								)}
 							</div>
 
 							{isOwner && (
