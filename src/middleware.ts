@@ -1,6 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
-import { env } from "cloudflare:workers";
 import { verify } from "hono/jwt"; // We can still use hono/jwt since we installed hono
+import { typedEnv as env } from "./utils/env";
 
 export const onRequest = defineMiddleware(async (context, next) => {
 	const token = context.cookies.get("auth_token")?.value;

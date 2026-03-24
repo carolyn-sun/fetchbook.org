@@ -1,5 +1,5 @@
-import { env } from "cloudflare:workers";
 import type { APIRoute } from "astro";
+import { typedEnv as env } from "../../utils/env";
 import {
 	normalizeJSON,
 	parseTextInfo,

@@ -1,7 +1,7 @@
-import { env } from "cloudflare:workers";
 import type { APIRoute } from "astro";
+import { typedEnv as env } from "../utils/env";
 
-export const GET: APIRoute = async ({ locals, redirect, url }) => {
+export const GET: APIRoute = async ({ redirect, url }) => {
 	const exclude = url.searchParams.get("exclude");
 	let randomRes: any;
 	if (exclude) {

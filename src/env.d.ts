@@ -1,15 +1,23 @@
 /// <reference types="astro/client" />
-type D1Database = import("@cloudflare/workers-types").D1Database;
+import type { D1Database } from "@cloudflare/workers-types";
 
-type Runtime = import("@astrojs/cloudflare").Runtime<{
+type MyEnv = {
 	DB: D1Database;
 	GITHUB_CLIENT_ID: string;
 	GITHUB_CLIENT_SECRET: string;
 	JWT_SECRET: string;
-}>;
+};
 
-declare namespace App {
-	interface Locals extends Runtime {
-		user: { username: string } | null;
+declare module "cloudflare:workers" {
+	export interface Env extends MyEnv {}
+}
+
+type Runtime = import("@astrojs/cloudflare").Runtime<MyEnv>;
+
+declare global {
+	namespace App {
+		interface Locals extends Runtime {
+			user: { username: string } | null;
+		}
 	}
 }

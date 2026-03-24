@@ -1,13 +1,13 @@
-import { env } from "cloudflare:workers";
 import type { APIRoute } from "astro";
 import { verify } from "hono/jwt";
+import { typedEnv as env } from "../../utils/env";
 import {
 	normalizeJSON,
 	parseTextInfo,
 	sanitizeDeviceInfo,
 } from "../../utils/fastfetch";
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request }) => {
 	const contentType = request.headers.get("Content-Type") || "";
 	const authHeader = request.headers.get("Authorization");
 

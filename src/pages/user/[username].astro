@@ -5,7 +5,7 @@ import { normalizeJSON } from '../../utils/fastfetch';
 
 const { username } = Astro.params;
 const user = Astro.locals.user;
-import { env } from "cloudflare:workers";
+import { typedEnv as env } from "../../utils/env";
 
 let results: any[] = [];
 const isOwner = user && user.username === username;
@@ -77,7 +77,7 @@ const origin = Astro.url.origin;
 									method="post"
 									action={`/api/device/${row.id}/edit`}
 									class="card-note-form"
-									onsubmit="event.preventDefault();"
+									onsubmit={"return false;"}
 								>
 									<input
 										type="text"
@@ -86,7 +86,7 @@ const origin = Astro.url.origin;
 										placeholder="Add a note..."
 										title="Edit note"
 										maxlength="32"
-										onchange="fetch(this.form.action, { method: 'POST', body: new URLSearchParams(new FormData(this.form)) }); this.blur();"
+										onchange={`const f = this.form; if(f) fetch(f.action, { method: 'POST', body: new URLSearchParams(new FormData(f)) }).finally(() => this.blur());`}
 										class="card-note-input"
 									/>
 								</form>
@@ -111,12 +111,12 @@ const origin = Astro.url.origin;
 									method="post"
 									action={`/api/device/${row.id}/edit`}
 									style="margin: 0; display: flex; gap: 4px;"
-									onsubmit="event.preventDefault();"
+									onsubmit={"return false;"}
 								>
 									<button
 										type="button"
 										title="Move Up"
-										onclick="fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'up' }) }).then(() => { const c = this.closest('.card'); const p = c.previousElementSibling; if (p && p.classList.contains('card')) c.parentNode.insertBefore(c, p); });"
+										onclick={`fetch(this.form?.action || '', { method: 'POST', body: new URLSearchParams({ action: 'up' }) }).then(() => { const c = this.closest('.card'); const p = c?.previousElementSibling; if (p?.classList.contains('card')) c?.parentNode?.insertBefore(c, p); });`}
 										class="secondary-btn"
 									>
 										↑
@@ -124,7 +124,7 @@ const origin = Astro.url.origin;
 									<button
 										type="button"
 										title="Move Down"
-										onclick="fetch(this.form.action, { method: 'POST', body: new URLSearchParams({ action: 'down' }) }).then(() => { const c = this.closest('.card'); const n = c.nextElementSibling; if (n && n.classList.contains('card')) c.parentNode.insertBefore(n, c); });"
+										onclick={`fetch(this.form?.action || '', { method: 'POST', body: new URLSearchParams({ action: 'down' }) }).then(() => { const c = this.closest('.card'); const n = c?.nextElementSibling; if (n?.classList.contains('card')) c?.parentNode?.insertBefore(n, c); });`}
 										class="secondary-btn"
 									>
 										↓
@@ -134,7 +134,7 @@ const origin = Astro.url.origin;
 									method="post"
 									action={`/api/device/${row.id}/visibility`}
 									style="margin: 0;"
-									onsubmit="event.preventDefault();"
+									onsubmit={"return false;"}
 								>
 									<input
 										type="hidden"
@@ -143,7 +143,7 @@ const origin = Astro.url.origin;
 									/>
 									<button
 										type="button"
-										onclick="fetch(this.form.action, { method: 'POST', body: new URLSearchParams(new FormData(this.form)) }).then(() => window.location.reload());"
+										onclick={`fetch(this.form?.action || '', { method: 'POST', body: new URLSearchParams(new FormData(this.form) as any) }).then(() => window.location.reload());`}
 										class="secondary-btn"
 									>
 										{row.is_public ? "Make Private" : "Make Public"}
@@ -153,11 +153,11 @@ const origin = Astro.url.origin;
 									method="post"
 									action={`/api/device/${row.id}/delete`}
 									style="margin: 0;"
-									onsubmit="event.preventDefault();"
+									onsubmit={"return false;"}
 								>
 									<button
 										type="button"
-										onclick="if(this.dataset.confirm !== '1') { this.dataset.confirm = '1'; this.innerText = 'Confirm'; setTimeout(() => { this.dataset.confirm = '0'; this.innerText = 'Delete'; }, 3000); } else { fetch(this.form.action, { method: 'POST' }).then(() => this.closest('.card').remove()); }"
+										onclick={`const t = this; if(t.dataset.confirm !== '1') { t.dataset.confirm = '1'; t.innerHTML = 'Confirm'; setTimeout(() => { t.dataset.confirm = '0'; t.innerHTML = 'Delete'; }, 3000); } else { fetch(t.form?.action || '', { method: 'POST' }).then(() => t.closest('.card')?.remove()); }`}
 										class="danger-btn"
 									>
 										Delete

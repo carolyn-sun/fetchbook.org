@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { sign } from 'hono/jwt';
 
 const user = Astro.locals.user;
-import { env } from "cloudflare:workers";
+import { typedEnv as env } from "../utils/env";
 
 const recentRes = await env.DB.prepare(
 	"SELECT username FROM devices WHERE is_public = 1 GROUP BY username ORDER BY MAX(created_at) DESC LIMIT 30",
@@ -179,7 +179,7 @@ if (user) {
 			<div
 				style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.5rem 1rem; max-width: 900px; margin: 0 auto; text-align: center;"
 			>
-				{recentUsers.map((u) => (
+				{recentUsers.map((u: any) => (
 					<a
 						href={`/user/${u}`}
 						style="display: block; color: #333; text-decoration: underline; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"

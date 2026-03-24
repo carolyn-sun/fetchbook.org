@@ -1,8 +1,8 @@
-import { env } from "cloudflare:workers";
 import type { APIRoute } from "astro";
 import { sign } from "hono/jwt";
+import { typedEnv as env } from "../../../utils/env";
 
-export const GET: APIRoute = async ({ url, locals, redirect, cookies }) => {
+export const GET: APIRoute = async ({ url, redirect, cookies }) => {
 	const code = url.searchParams.get("code");
 	if (!code) return new Response("Missing code parameter", { status: 400 });
 
