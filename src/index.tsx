@@ -509,7 +509,6 @@ app.get("/", async (c) => {
 
 	let cliToken = "";
 	let cliCommand = "";
-	let psCommand = "";
 	if (user) {
 		cliToken = await sign(
 			{
@@ -520,7 +519,6 @@ app.get("/", async (c) => {
 			"HS256",
 		);
 		cliCommand = `curl -X POST -H 'Content-Type: application/json; charset=utf-8' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
-		psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json; charset=utf-8" } -Body $data`;
 	}
 
 	return c.html(
@@ -626,57 +624,50 @@ app.get("/", async (c) => {
 									marginBottom: "8px",
 								}}
 							>
-								Windows (PowerShell)
+								Windows
 							</strong>
 							<div
-								style={{ display: "flex", gap: "8px", alignItems: "center" }}
+								style={{
+									fontSize: "0.85rem",
+									padding: "10px",
+									borderRadius: "4px",
+									border: "1px solid #ced4da",
+									background: "#fff",
+									color: "#333",
+									lineHeight: "1.5",
+								}}
 							>
-								<div
-									className="code-inline-box"
-									style={{
-										margin: 0,
-										flex: 1,
-										fontSize: "0.85rem",
-										padding: "10px",
-										borderRadius: "4px",
-										border: "1px solid #ced4da",
-										background: "#fff",
-										whiteSpace: "pre-wrap",
-										wordBreak: "break-all",
-									}}
-								>
-									[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;
-									$data = fastfetch --format json | Out-String;
-									Invoke-RestMethod -Uri "{origin}/api/upload" -Method Post
-									-Headers @{"{"} Authorization = "Bearer{" "}
-									<span
-										class="blur-hover"
-										style={{
-											filter: "blur(4px)",
-											transition: "filter 0.2s",
-											cursor: "pointer",
-											background: "#eee",
-										}}
-									>
-										{cliToken}
-									</span>
-									"; "Content-Type" = "application/json; charset=utf-8" {"}"}{" "}
-									-Body $data
-								</div>
-								<button
-									type="button"
-									class="copy-token-btn primary-btn"
-									data-cmd={psCommand}
-								>
-									Copy
-								</button>
-							</div>
-							<div
-								style={{ fontSize: "0.8rem", color: "#666", marginTop: "8px" }}
-							>
-								⚠️ You may need to manually verify the JSON output on Windows
-								platforms if it contains non-ASCII characters, e.g. Chinese,
-								Japanese, Korean, etc.
+								<p style={{ margin: "0 0 8px 0" }}>
+									We recommend using the copy method to upload on Windows to
+									correctly parse CJK or other no-ASCII characters.
+								</p>
+								<ol style={{ margin: 0, paddingLeft: "20px" }}>
+									<li>
+										Install fastfetch:{" "}
+										<code
+											style={{
+												background: "#f1f3f5",
+												padding: "2px 4px",
+												borderRadius: "3px",
+											}}
+										>
+											winget install fastfetch
+										</code>
+									</li>
+									<li>
+										Run in terminal:{" "}
+										<code
+											style={{
+												background: "#f1f3f5",
+												padding: "2px 4px",
+												borderRadius: "3px",
+											}}
+										>
+											fastfetch --format json
+										</code>
+									</li>
+									<li>Copy the output to the textfield below.</li>
+								</ol>
 							</div>
 						</div>
 					</div>
