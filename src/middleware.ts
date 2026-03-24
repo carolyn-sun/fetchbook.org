@@ -14,9 +14,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
 				context.locals.user = { username: payload.username };
 			} else {
 				context.locals.user = null;
+				context.cookies.delete("auth_token", { path: "/" });
 			}
 		} catch {
 			context.locals.user = null;
+			context.cookies.delete("auth_token", { path: "/" });
 		}
 	} else {
 		context.locals.user = null;
