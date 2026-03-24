@@ -3,8 +3,16 @@ interface Props {
   title: string;
 }
 
+import { typedEnv as env } from "../utils/env";
+
 const { title } = Astro.props;
 const user = Astro.locals.user;
+
+let totalDevicesCount = 0;
+try {
+	const countRes = await env.DB.prepare("SELECT COUNT(*) as count FROM devices").first();
+	totalDevicesCount = Number((countRes as any)?.count) || 0;
+} catch (e) {}
 ---
 
 <html lang="en">
@@ -77,6 +85,12 @@ const user = Astro.locals.user;
                 >
                   my fetchbook
                 </a>
+                <a
+                  href="/privacy"
+                  style={{ color: "#666", textDecoration: "underline" }}
+                >
+                  my privacy
+                </a>
                 <span>
                   Logged in as <strong>{user.username}</strong> |{" "}
                   <a
@@ -88,9 +102,14 @@ const user = Astro.locals.user;
                 </span>
               </span>
             ) : (
-              <a href="/auth/github/login" class="primary-btn">
-                Login with GitHub
-              </a>
+              <span style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+                <a href="/privacy" style={{ color: "#666", textDecoration: "underline", fontSize: "0.9rem" }}>
+                  Privacy
+                </a>
+                <a href="/auth/github/login" class="primary-btn">
+                  Login with GitHub
+                </a>
+              </span>
             )
           }
         </div>
@@ -106,7 +125,7 @@ const user = Astro.locals.user;
           textAlign: "center",
         }}
       >
-        fetchbook.org ·{" "}
+        <span style="font-weight: bold; color: #666;">{totalDevicesCount.toLocaleString()}</span> upload{totalDevicesCount === 1 ? "" : "s"} · fetchbook.org ·{" "}
         <a
           href="https://github.com/carolyn-sun/fetchbook.org"
           target="_blank"
@@ -114,13 +133,6 @@ const user = Astro.locals.user;
           rel="noopener"
         >
           carolyn-sun/fetchbook.org
-        </a>{" "}
-        ·{" "}
-        <a
-          href="/privacy"
-          style={{ color: "#888", textDecoration: "underline" }}
-        >
-          Privacy & Data Rights
         </a>
       </footer>
     </div>
