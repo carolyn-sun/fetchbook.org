@@ -1,0 +1,193 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { sign } from 'hono/jwt';
+
+const user = Astro.locals.user;
+import { env } from "cloudflare:workers";
+
+const recentRes = await env.DB.prepare(
+	"SELECT username FROM devices WHERE is_public = 1 GROUP BY username ORDER BY MAX(created_at) DESC LIMIT 30",
+).all();
+const recentUsers = (recentRes.results || []).map((r: any) => String(r.username));
+
+const origin = Astro.url.origin;
+
+let cliToken = "";
+let cliCommand = "";
+if (user) {
+	cliToken = await sign(
+		{
+			username: user.username,
+			exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 10,
+		},
+		env.JWT_SECRET,
+		"HS256",
+	);
+	cliCommand = `curl -X POST -H 'Content-Type: application/json; charset=utf-8' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
+}
+---
+
+<Layout title="fetchbook">
+	<div style="margin-bottom: 3rem;">
+		<h2>Upload Your Device</h2>
+		<p style="color: #555; margin-bottom: 1.5rem;">
+			You can upload your device configuration using the web interface or
+			directly from your terminal. Both methods require{" "}
+			<a
+				href="https://github.com/fastfetch-cli/fastfetch"
+				target="_blank"
+				rel="noopener"
+				style="color: #000; font-weight: bold;"
+			>
+				fastfetch
+			</a>
+			.
+		</p>
+
+		{user && (
+			<div
+				style="background: #f8f9fa; padding: 16px; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #e9ecef;"
+			>
+				<h3 style="margin: 0 0 12px 0; font-size: 1rem;">
+					💻 Your CLI Upload Command
+				</h3>
+				<p style="margin: 0 0 12px 0; font-size: 0.9rem; color: #666;">
+					Run this command directly in your terminal to easily upload your
+					setup. Keep it secret!
+				</p>
+				<div style="margin-bottom: 16px;">
+					<strong style="font-size: 0.85rem; color: #555; display: block; margin-bottom: 8px;">
+						Linux / macOS (Bash/Zsh)
+					</strong>
+					<div style="display: flex; gap: 8px; align-items: center;">
+						<div
+							class="code-inline-box"
+							style="margin: 0; flex: 1; font-size: 0.85rem; padding: 10px; border-radius: 4px; border: 1px solid #ced4da; background: #fff; white-space: pre-wrap; word-break: break-all;"
+						>
+							curl -X POST -H 'Content-Type: application/json' -H
+							'Authorization: Bearer{" "}
+							<span
+								class="blur-hover"
+								style="filter: blur(4px); transition: filter 0.2s; cursor: pointer; background: #eee;"
+							>
+								{cliToken}
+							</span>
+							' -d "$(fastfetch --format json)" "{origin}/api/upload"
+						</div>
+						<button
+							type="button"
+							class="copy-token-btn primary-btn"
+							data-cmd={cliCommand}
+						>
+							Copy
+						</button>
+					</div>
+				</div>
+
+				<div>
+					<strong style="font-size: 0.85rem; color: #555; display: block; margin-bottom: 8px;">
+						Windows
+					</strong>
+					<div
+						style="font-size: 0.85rem; padding: 10px; border-radius: 4px; border: 1px solid #ced4da; background: #fff; color: #333; line-height: 1.5;"
+					>
+						<p style="margin: 0 0 8px 0;">
+							We recommend using the copy method to upload on Windows to
+							correctly parse CJK or other non-ASCII characters.
+						</p>
+						<ol style="margin: 0; padding-left: 20px;">
+							<li>
+								Install fastfetch:{" "}
+								<code style="background: #f1f3f5; padding: 2px 4px; border-radius: 3px;">
+									winget install fastfetch
+								</code>
+							</li>
+							<li>
+								Run in terminal:{" "}
+								<code style="background: #f1f3f5; padding: 2px 4px; border-radius: 3px;">
+									fastfetch --format json
+								</code>
+							</li>
+							<li>Copy the output to the textfield below.</li>
+						</ol>
+					</div>
+				</div>
+			</div>
+		)}
+
+		<form
+			action="/api/web-upload"
+			method="post"
+			style="background: #f9f9f9; padding: 1.5rem; border-radius: 8px; border: 1px solid #eee;"
+		>
+			{user ? (
+				<>
+					<h3 style="margin: 0 0 16px 0; font-size: 1rem;">
+						🌐 Upload via Web
+					</h3>
+					<label class="form-group">
+						<strong class="form-label-title">
+							Device Info (JSON ONLY)
+						</strong>
+						<textarea
+							name="device_info"
+							class="form-textarea"
+							rows="6"
+							required
+							placeholder="Paste raw fastfetch JSON output..."
+						></textarea>
+					</label>
+
+					<label class="form-checkbox-group">
+						<input
+							type="checkbox"
+							name="is_public"
+							value="1"
+							checked={true}
+							style="width: auto; margin: 0;"
+						/>
+						<span style="margin: 0;">
+							Make this public on my fetchbook
+						</span>
+					</label>
+
+					<button type="submit" class="primary-btn">
+						Publish to fetchbook
+					</button>
+				</>
+			) : (
+				<div style="padding: 1rem; background: #fff3cd; color: #856404; border-radius: 4px; text-align: center; font-weight: bold;">
+					Please Login with GitHub to upload your device.
+				</div>
+			)}
+		</form>
+	</div>
+
+	{recentUsers.length > 0 && (
+		<div style="text-align: center; margin-top: 4rem; margin-bottom: 2rem;">
+			<a href="/random" class="primary-btn">
+				Explore a random fetchbook ✨
+			</a>
+		</div>
+	)}
+
+	{recentUsers.length > 0 && (
+		<div style="margin-bottom: 4rem;">
+			<h3 style="text-align: center; margin-bottom: 1.5rem; color: #666;">
+				Recently Updated
+			</h3>
+			<div
+				style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.5rem 1rem; max-width: 900px; margin: 0 auto; text-align: center;"
+			>
+				{recentUsers.map((u) => (
+					<a
+						href={`/user/${u}`}
+						style="display: block; color: #333; text-decoration: underline; font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+					>
+						{u}
+					</a>
+				))}
+			</div>
+		</div>
+	)}
+</Layout>

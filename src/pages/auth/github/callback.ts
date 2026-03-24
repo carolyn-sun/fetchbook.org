@@ -1,0 +1,59 @@
+import { env } from "cloudflare:workers";
+import type { APIRoute } from "astro";
+import { sign } from "hono/jwt";
+
+export const GET: APIRoute = async ({ url, locals, redirect, cookies }) => {
+	const code = url.searchParams.get("code");
+	if (!code) return new Response("Missing code parameter", { status: 400 });
+
+	const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+		body: JSON.stringify({
+			client_id: env.GITHUB_CLIENT_ID,
+			client_secret: env.GITHUB_CLIENT_SECRET,
+			code,
+		}),
+	});
+
+	const tokenData = (await tokenRes.json()) as any;
+	if (!tokenData.access_token)
+		return new Response("Failed to get access token from GitHub", {
+			status: 400,
+		});
+
+	const userRes = await fetch("https://api.github.com/user", {
+		headers: {
+			Authorization: `Bearer ${tokenData.access_token}`,
+			"User-Agent": "fetchbook-app",
+		},
+	});
+
+	if (!userRes.ok)
+		return new Response("Failed to get user data from GitHub API", {
+			status: 400,
+		});
+	const userData = (await userRes.json()) as any;
+	const username = userData.login;
+
+	if (!username)
+		return new Response("GitHub account has no valid login", { status: 400 });
+
+	const payload = {
+		username,
+		exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7, // 7 days
+	};
+	const token = await sign(payload, env.JWT_SECRET, "HS256");
+
+	cookies.set("auth_token", token, {
+		httpOnly: true,
+		secure: url.protocol === "https:",
+		path: "/",
+		maxAge: 60 * 60 * 24 * 7,
+	});
+
+	return redirect("/");
+};

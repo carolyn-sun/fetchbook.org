@@ -1,0 +1,107 @@
+import { env } from "cloudflare:workers";
+import type { APIRoute } from "astro";
+import { verify } from "hono/jwt";
+import {
+	normalizeJSON,
+	parseTextInfo,
+	sanitizeDeviceInfo,
+} from "../../utils/fastfetch";
+
+export const POST: APIRoute = async ({ request, locals }) => {
+	const contentType = request.headers.get("Content-Type") || "";
+	const authHeader = request.headers.get("Authorization");
+
+	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+		return new Response(
+			JSON.stringify({
+				error:
+					"Missing or invalid Authorization header. Please pass your CLI token as a Bearer token.",
+			}),
+			{ status: 401, headers: { "Content-Type": "application/json" } },
+		);
+	}
+
+	const token = authHeader.split(" ")[1];
+	let finalUsername = "";
+	try {
+		const payload = await verify(token, env.JWT_SECRET, "HS256");
+		if (!payload || typeof payload.username !== "string") throw new Error();
+		finalUsername = payload.username;
+	} catch {
+		return new Response(
+			JSON.stringify({
+				error: "Invalid CLI token. Get a fresh one from your profile page.",
+			}),
+			{ status: 401, headers: { "Content-Type": "application/json" } },
+		);
+	}
+
+	let deviceInfoRaw: any;
+	if (contentType.includes("application/json")) {
+		deviceInfoRaw = await request.json();
+	} else {
+		deviceInfoRaw = await request.text();
+	}
+
+	let deviceInfo: any;
+	let rawObj: any = null;
+	if (typeof deviceInfoRaw === "string") {
+		try {
+			rawObj = JSON.parse(deviceInfoRaw);
+			deviceInfo = normalizeJSON(rawObj);
+		} catch {
+			deviceInfo = parseTextInfo(deviceInfoRaw);
+		}
+	} else if (Array.isArray(deviceInfoRaw)) {
+		rawObj = deviceInfoRaw;
+		deviceInfo = normalizeJSON(rawObj);
+	} else {
+		const { username: _u, is_public, ...rest } = deviceInfoRaw;
+		rawObj = Object.keys(rest).length ? rest : deviceInfoRaw;
+		deviceInfo = normalizeJSON(rawObj);
+		deviceInfoRaw = { is_public, ...rest };
+	}
+
+	const sanitized = sanitizeDeviceInfo(deviceInfo);
+	const sanitizedRaw = rawObj ? sanitizeDeviceInfo(rawObj) : null;
+
+	if (
+		Object.keys(sanitized).length === 0 ||
+		(!sanitized.OS && !sanitized["User@Host"])
+	) {
+		return new Response(
+			JSON.stringify({
+				error:
+					"Invalid device metadata. Please ensure you are sending valid full JSON output from fastfetch.",
+			}),
+			{ status: 400, headers: { "Content-Type": "application/json" } },
+		);
+	}
+
+	let isPublic = 1;
+	if (
+		typeof deviceInfoRaw === "object" &&
+		!Array.isArray(deviceInfoRaw) &&
+		"is_public" in deviceInfoRaw
+	) {
+		isPublic = deviceInfoRaw.is_public ? 1 : 0;
+	}
+
+	await env.DB.prepare(
+		"INSERT INTO devices (username, device_info, raw_device_info, is_public) VALUES (?, ?, ?, ?)",
+	)
+		.bind(
+			finalUsername,
+			JSON.stringify(sanitized),
+			sanitizedRaw ? JSON.stringify(sanitizedRaw) : null,
+			isPublic,
+		)
+		.run();
+
+	return new Response(
+		JSON.stringify({ success: true, sanitized_info: sanitized }),
+		{
+			headers: { "Content-Type": "application/json" },
+		},
+	);
+};
