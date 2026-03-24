@@ -11,7 +11,10 @@ export const POST: APIRoute = async ({ request, locals, redirect }) => {
 	const isPublic = formData.get("is_public") === "1";
 	const deviceInfoStrRaw = formData.get("device_info");
 	if (typeof deviceInfoStrRaw !== "string") {
-		return new Response("Invalid formulation.", { status: 400 });
+		return new Response(
+			"Invalid form submission: missing or invalid 'device_info' field.",
+			{ status: 400 },
+		);
 	}
 
 	const deviceInfoStr = deviceInfoStrRaw.slice(0, 100000);
