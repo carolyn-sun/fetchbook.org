@@ -22,9 +22,8 @@ export const GET: APIRoute = async ({ url, redirect, cookies }) => {
 	// Handle non-2xx responses and potential non-JSON bodies from GitHub
 	if (!tokenRes.ok) {
 		// Try to read response body as text (may be HTML or plain text)
-		let errorBody = "";
 		try {
-			errorBody = await tokenRes.text();
+			await tokenRes.text();
 		} catch {
 			// Ignore body read errors; we'll return a generic message
 		}
@@ -38,9 +37,12 @@ export const GET: APIRoute = async ({ url, redirect, cookies }) => {
 	try {
 		tokenData = await tokenRes.json();
 	} catch {
-		return new Response("Invalid response from GitHub when fetching access token", {
-			status: 502,
-		});
+		return new Response(
+			"Invalid response from GitHub when fetching access token",
+			{
+				status: 502,
+			},
+		);
 	}
 	if (!tokenData.access_token)
 		return new Response("Failed to get access token from GitHub", {

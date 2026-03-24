@@ -38,12 +38,7 @@ export const POST: APIRoute = async ({ request }) => {
 
 	const rawText = await request.text();
 	if (rawText.length > 100000) {
-		try {
-			deviceInfoRaw = await request.json();
-		} catch {
-			// Fallback to treating the body as text if JSON parsing fails
-			deviceInfoRaw = await request.text();
-		}
+		return new Response(
 			JSON.stringify({ error: "Payload too large. Max 100KB." }),
 			{ status: 413, headers: { "Content-Type": "application/json" } },
 		);

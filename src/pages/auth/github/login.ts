@@ -1,9 +1,13 @@
 import type { APIRoute } from "astro";
 import { typedEnv as env } from "../../../utils/env";
-import { randomBytes } from "crypto";
 
 export const GET: APIRoute = ({ redirect, cookies }) => {
-	const state = randomBytes(32).toString("hex");
+	const array = new Uint8Array(32);
+	crypto.getRandomValues(array);
+	const state = Array.from(array, (byte) =>
+		byte.toString(16).padStart(2, "0"),
+	).join("");
+
 	cookies.set("github_oauth_state", state, {
 		httpOnly: true,
 		secure: true,
