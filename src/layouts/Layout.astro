@@ -69,28 +69,21 @@ try {
         >
           {
             user ? (
-              <span
-                style={{
-                  fontSize: "0.9rem",
-                  color: "#666",
-                  display: "flex",
-                  alignItems: "center",
-                  flexWrap: "wrap",
-                  gap: "10px",
-                }}
-              >
-                <a
-                  href={`/user/${user.username}`}
-                  style={{ color: "#666", textDecoration: "underline" }}
-                >
-                  my fetchbook
-                </a>
-                <a
-                  href="/privacy"
-                  style={{ color: "#666", textDecoration: "underline" }}
-                >
-                  my privacy
-                </a>
+              <span class="header-user-block">
+                <span class="header-user-links">
+                  <a
+                    href={`/user/${user.username}`}
+                    style={{ color: "#666", textDecoration: "underline" }}
+                  >
+                    my fetchbook
+                  </a>
+                  <a
+                    href="/privacy"
+                    style={{ color: "#666", textDecoration: "underline" }}
+                  >
+                    my privacy
+                  </a>
+                </span>
                 <span>
                   Logged in as <strong>{user.username}</strong> |{" "}
                   <a
@@ -102,7 +95,7 @@ try {
                 </span>
               </span>
             ) : (
-              <span style={{ display: "flex", gap: "15px", alignItems: "center" }}>
+              <span class="header-user-block">
                 <a href="/privacy" style={{ color: "#666", textDecoration: "underline", fontSize: "0.9rem" }}>
                   Privacy
                 </a>
