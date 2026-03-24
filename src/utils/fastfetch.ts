@@ -19,8 +19,8 @@ export const sanitizeDeviceInfo = (info: any): any => {
 	const redactString = (value: string): string => {
 		let redacted = value;
 		redacted = redacted.replace(ipv4Regex, "[REDACTED_IP]");
+		redacted = redacted.replace(macRegex, "[REDACTED_MAC]"); // Mac must run before IPv6 because IPv6 format encompasses MAC formats
 		redacted = redacted.replace(ipv6Regex, "[REDACTED_IP]");
-		redacted = redacted.replace(macRegex, "[REDACTED_MAC]");
 		return redacted;
 	};
 
@@ -111,9 +111,12 @@ const KEY_MAP: Record<string, string> = {
 	locale: "Locale",
 };
 
-const toGB = (b: number) => `${(b / 1024 / 1024 / 1024).toFixed(2)} GiB`;
+export const toGB = (b?: number) => {
+	if (typeof b !== "number") return "";
+	return `${(b / 1024 / 1024 / 1024).toFixed(2)} GiB`;
+};
 
-const formatFastfetchResult = (
+export const formatFastfetchResult = (
 	type: string,
 	result: any,
 ): string | { keySuffix?: string; value: string }[] => {
