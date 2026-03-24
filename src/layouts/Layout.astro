@@ -58,7 +58,10 @@ const user = Astro.locals.user;
 								gap: "10px",
 							}}
 						>
-							<a href={`/user/${user.username}`} class="secondary-btn">
+							<a 
+								href={`/user/${user.username}`} 
+								style={{ color: "#666", textDecoration: "underline" }}
+							>
 								my fetchbook
 							</a>
 							<span>

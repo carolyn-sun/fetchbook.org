@@ -50,8 +50,8 @@ body {
 }
 #root { line-height: 1.5; padding: 1rem; max-width: 1200px; margin: 0 auto; color: #333; background-color: #fff; min-height: 100vh; box-sizing: border-box; }
 h1 { margin-top: 0; }
-textarea, input, select { width: 100%; box-sizing: border-box; padding: 0.5rem; margin-bottom: 1rem; }
-textarea { font-size: 0.95rem; resize: none; }
+textarea, input, select { width: 100%; box-sizing: border-box; padding: 0.5rem; margin-bottom: 1rem; background: #fff; color: #111; border: 1px solid #ccc; border-radius: 4px; }
+textarea { font-size: 0.95rem; resize: none; background: #f8f9fa; }
 button { font-family: inherit; font-size: 1rem; background: #000; color: #fff; border: none; padding: 0.5rem 1rem; cursor: pointer; border-radius: 4px;}
 button:hover { background: #444; }
 pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; font-size: 0.9rem; }
@@ -69,6 +69,10 @@ pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; 
   html { background-color: #000; }
   #root { filter: invert(1) hue-rotate(180deg); }
   .terminal-block, img, video, iframe { filter: invert(1) hue-rotate(180deg); }
+  
+  /* Reduce glaring brightness of the delete button in dark interface */
+  .danger-btn { opacity: 0.6; filter: saturate(0.5); }
+  .danger-btn:hover { opacity: 1; filter: none; }
 }
 
 /* Card Headers */
