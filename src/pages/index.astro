@@ -1,6 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { sign } from 'hono/jwt';
+import FastfetchRender from '../components/FastfetchRender.astro';
+import { normalizeJSON } from '../utils/fastfetch';
 
 const user = Astro.locals.user;
 import { typedEnv as env } from "../utils/env";
@@ -9,6 +11,10 @@ const recentRes = await env.DB.prepare(
 	"SELECT username FROM devices WHERE is_public = 1 GROUP BY username ORDER BY MAX(created_at) DESC LIMIT 30",
 ).all();
 const recentUsers = (recentRes.results || []).map((r: any) => String(r.username));
+
+const latestDeviceRes = await env.DB.prepare(
+	"SELECT * FROM devices WHERE is_public = 1 ORDER BY created_at DESC, id DESC LIMIT 1"
+).first() as any;
 
 const origin = Astro.url.origin;
 
@@ -28,6 +34,36 @@ if (user) {
 ---
 
 <Layout title="fetchbook">
+	{latestDeviceRes && (
+		<div style="margin-bottom: 4rem;">
+			<h2 style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1rem;">
+				<span>Latest Upload</span>
+				<a href={`/user/${latestDeviceRes.username}`} style="font-size: 1rem; color: #666; text-decoration: underline;">
+					{latestDeviceRes.username}'s fetchbook
+				</a>
+			</h2>
+			<div class="card" style="margin-bottom: 0;">
+				<div class="terminal-container" style="margin-top: 0;">
+					<FastfetchRender
+						username={latestDeviceRes.username}
+						info={
+							latestDeviceRes.raw_device_info
+								? normalizeJSON(JSON.parse(latestDeviceRes.raw_device_info as string))
+								: JSON.parse(latestDeviceRes.device_info as string)
+						}
+					/>
+					<div class="card-time-wrapper">
+						<span class="card-time">
+							<time datetime={`${(latestDeviceRes.created_at || "").replace(" ", "T")}Z`}>
+								Uploaded at {(latestDeviceRes.created_at || "").slice(0, 16)} UTC
+							</time>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	)}
+
 	<div style="margin-bottom: 3rem;">
 		<h2>Upload Your Device</h2>
 		<p style="color: #555; margin-bottom: 1.5rem;">
