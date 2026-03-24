@@ -5,6 +5,19 @@ import { typedEnv as env } from "../../../utils/env";
 export const GET: APIRoute = async ({ url, redirect, cookies }) => {
 	const code = url.searchParams.get("code");
 	if (!code) return new Response("Missing code parameter", { status: 400 });
+
+	const state = url.searchParams.get("state");
+	const storedState = cookies.get("github_oauth_state")?.value;
+	if (!state || !storedState || state !== storedState) {
+		return new Response(
+			"Invalid or missing state parameter (CSRF protection blocked the login).",
+			{ status: 400 },
+		);
+	}
+
+	// State is valid; delete the cookie as it is single-use
+	cookies.delete("github_oauth_state", { path: "/" });
+
 	let tokenRes: Response;
 	try {
 		tokenRes = await fetch("https://github.com/login/oauth/access_token", {
@@ -35,9 +48,12 @@ export const GET: APIRoute = async ({ url, redirect, cookies }) => {
 			// Ignore body read errors; we'll return a generic message
 		}
 
-		return new Response("GitHub OAuth token exchange failed. Please restart the login flow.", {
-			status: 400,
-		});
+		return new Response(
+			"GitHub OAuth token exchange failed. Please restart the login flow.",
+			{
+				status: 400,
+			},
+		);
 	}
 
 	let tokenData: any;
