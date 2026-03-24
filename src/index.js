@@ -378,8 +378,8 @@ app.get("/", async (c) => {
             username: user.username,
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 10,
         }, c.env.JWT_SECRET, "HS256");
-        cliCommand = `curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
-        psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json" } -Body $data`;
+        cliCommand = `curl -X POST -H 'Content-Type: application/json; charset=utf-8' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
+        psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json; charset=utf-8" } -Body $data`;
     }
     return c.html(_jsxs(Layout, { title: "fetchbook", user: user, children: [_jsxs("div", { style: { marginBottom: "3rem" }, children: [_jsx("h2", { children: "Upload Your Device" }), _jsxs("p", { style: { color: "#555", marginBottom: "1.5rem" }, children: ["You can upload your device configuration using the web interface or directly from your terminal. Both methods require", " ", _jsx("a", { href: "https://github.com/fastfetch-cli/fastfetch", target: "_blank", rel: "noopener", style: { color: "#000", fontWeight: "bold" }, children: "fastfetch" }), "."] }), user && (_jsxs("div", { style: {
                             background: "#f8f9fa",
@@ -431,7 +431,7 @@ app.get("/", async (c) => {
                                                             transition: "filter 0.2s",
                                                             cursor: "pointer",
                                                             background: "#eee",
-                                                        }, children: cliToken }), "\"; \"Content-Type\" = \"application/json\" ", "}", " -Body $data"] }), _jsx("button", { type: "button", class: "copy-token-btn primary-btn", "data-cmd": psCommand, children: "Copy" })] }), _jsx("div", { style: { fontSize: "0.8rem", color: "#666", marginTop: "8px" }, children: "\u26A0\uFE0F You may need to manually verify the JSON output on Windows platforms if it contains non-ASCII characters, e.g. Chinese, Japanese, Korean, etc." })] })] })), _jsx("form", { action: "/api/web-upload", method: "post", style: {
+                                                        }, children: cliToken }), "\"; \"Content-Type\" = \"application/json; charset=utf-8\" ", "}", " ", "-Body $data"] }), _jsx("button", { type: "button", class: "copy-token-btn primary-btn", "data-cmd": psCommand, children: "Copy" })] }), _jsx("div", { style: { fontSize: "0.8rem", color: "#666", marginTop: "8px" }, children: "\u26A0\uFE0F You may need to manually verify the JSON output on Windows platforms if it contains non-ASCII characters, e.g. Chinese, Japanese, Korean, etc." })] })] })), _jsx("form", { action: "/api/web-upload", method: "post", style: {
                             background: "#f9f9f9",
                             padding: "1.5rem",
                             borderRadius: "8px",

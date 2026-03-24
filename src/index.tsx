@@ -519,8 +519,8 @@ app.get("/", async (c) => {
 			c.env.JWT_SECRET,
 			"HS256",
 		);
-		cliCommand = `curl -X POST -H 'Content-Type: application/json' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
-		psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json" } -Body $data`;
+		cliCommand = `curl -X POST -H 'Content-Type: application/json; charset=utf-8' -H 'Authorization: Bearer ${cliToken}' -d "$(fastfetch --format json)" "${origin}/api/upload"`;
+		psCommand = `[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; $data = fastfetch --format json | Out-String; Invoke-RestMethod -Uri "${origin}/api/upload" -Method Post -Headers @{ Authorization = "Bearer ${cliToken}"; "Content-Type" = "application/json; charset=utf-8" } -Body $data`;
 	}
 
 	return c.html(
@@ -660,7 +660,8 @@ app.get("/", async (c) => {
 									>
 										{cliToken}
 									</span>
-									"; "Content-Type" = "application/json" {"}"} -Body $data
+									"; "Content-Type" = "application/json; charset=utf-8" {"}"}{" "}
+									-Body $data
 								</div>
 								<button
 									type="button"
