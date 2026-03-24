@@ -10,7 +10,7 @@ export const POST: APIRoute = async ({ request, params, locals, redirect }) => {
 
 	if (formData.has("note")) {
 		const noteValue = formData.get("note");
-		const note = noteValue ? String(noteValue).slice(0, 32) : null;
+		const note = noteValue ? String(noteValue).slice(0, 20) : null;
 		await env.DB.prepare(
 			"UPDATE devices SET note = ? WHERE id = ? AND username = ?",
 		)

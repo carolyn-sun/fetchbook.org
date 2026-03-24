@@ -62,6 +62,16 @@ if (!isOwner && results.length === 0) {
 				<div class="card">
 					<div class="card-header-row">
 						<div class="card-header-left">
+							{isOwner && (
+								<div class="card-meta-row">
+									{row.is_public ? (
+										<span class="badge badge-public">🌐 Public</span>
+									) : (
+										<span class="badge badge-private">🔒 Private</span>
+									)}
+								</div>
+							)}
+							
 							{isOwner ? (
 								<form
 									method="post"
@@ -75,7 +85,7 @@ if (!isOwner && results.length === 0) {
 										value={row.note || ""}
 										placeholder="Add a note..."
 										title="Edit note"
-										maxlength="32"
+										maxlength="20"
 										onchange={`const f = this.form; if(f) fetch(f.action, { method: 'POST', body: new URLSearchParams(new FormData(f)) }).finally(() => this.blur());`}
 										class="card-note-input"
 									/>
@@ -83,24 +93,14 @@ if (!isOwner && results.length === 0) {
 							) : row.note ? (
 								<h3 class="card-note-title">{row.note}</h3>
 							) : null}
-
-							{isOwner && (
-								<div class="card-meta-row">
-									{row.is_public ? (
-										<span class="badge badge-public">🌐 Public</span>
-									) : (
-										<span class="badge badge-private">🔒 Private</span>
-									)}
-								</div>
-							)}
 						</div>
 
 						{isOwner && (
-							<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+							<div class="card-action-row">
 								<form
 									method="post"
 									action={`/api/device/${row.id}/edit`}
-									style="margin: 0; display: flex; gap: 4px;"
+									class="card-action-form"
 									onsubmit={"return false;"}
 								>
 									<button
@@ -123,7 +123,7 @@ if (!isOwner && results.length === 0) {
 								<form
 									method="post"
 									action={`/api/device/${row.id}/visibility`}
-									style="margin: 0;"
+									class="card-action-form"
 									onsubmit={"return false;"}
 								>
 									<input
@@ -142,7 +142,7 @@ if (!isOwner && results.length === 0) {
 								<form
 									method="post"
 									action={`/api/device/${row.id}/delete`}
-									style="margin: 0;"
+									class="card-action-form"
 									onsubmit={"return false;"}
 								>
 									<button

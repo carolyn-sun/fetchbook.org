@@ -79,16 +79,6 @@ pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; 
 
 
 
-@media (max-width: 600px) {
-  .header-user-block {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-    margin-top: 4px;
-  }
-
-}
-
 @media (prefers-color-scheme: dark) {
   html { background-color: #000; }
   #root { filter: invert(1) hue-rotate(180deg); }
@@ -111,17 +101,23 @@ pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; 
   display: flex;
   flex-direction: row;
   align-items: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 12px;
 }
-.card-note-form { margin: 0; flex: 1 1 500px; max-width: 100%; min-width: 80px; }
+.card-note-form { margin: 0; flex: 0 0 calc(20.5em + 18px); max-width: 100%; }
 .card-note-input {
   color: #333; font-size: 1rem; font-weight: bold;
   background: #fff; border: 1px solid #ccc;
   border-radius: 4px; padding: 4px 8px;
   margin: 0; font-family: inherit; width: 100%; box-sizing: border-box;
 }
-.card-note-title { margin: 0; color: #333; font-size: 1.1rem; }
+.card-action-row {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+}
+.card-action-form {
+  display: contents;
+}
+.card-note-title { margin: 0; color: #333; font-size: 1.1rem; max-width: 20em; word-break: break-word; }
 .card-meta-row { display: flex; align-items: center; gap: 10px; }
 .badge {
   padding: 2px 8px; border-radius: 12px;
@@ -158,3 +154,40 @@ pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; 
   cursor: pointer;
   margin-bottom: 24px;
 }
+
+@media (max-width: 600px) {
+  .header-user-block {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .card-header-left {
+    width: 100%;
+  }
+  .card-note-form {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+  .card-action-row {
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+  .card-action-form button {
+    flex-grow: 1;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+/* Fluid Mobile Scaling for Em-based Note Form */
+@media (max-width: 420px) { .card-note-form, .card-note-input, .card-note-title { font-size: 0.95rem !important; } }
+@media (max-width: 400px) { .card-note-form, .card-note-input, .card-note-title { font-size: 0.90rem !important; } }
+@media (max-width: 380px) { .card-note-form, .card-note-input, .card-note-title { font-size: 0.85rem !important; } }
+@media (max-width: 360px) { .card-note-form, .card-note-input, .card-note-title { font-size: 0.80rem !important; } }
+@media (max-width: 340px) { .card-note-form, .card-note-input, .card-note-title { font-size: 0.75rem !important; } }
+@media (max-width: 320px) { .card-note-form, .card-note-input, .card-note-title { font-size: 0.70rem !important; } }
+@media (max-width: 300px) { .card-note-form, .card-note-input, .card-note-title { font-size: 0.65rem !important; } }
+@media (max-width: 280px) { .card-note-form, .card-note-input, .card-note-title { font-size: 0.60rem !important; } }
+@media (max-width: 260px) { .card-note-form, .card-note-input, .card-note-title { font-size: 0.55rem !important; } }
