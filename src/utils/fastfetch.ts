@@ -5,7 +5,7 @@ export const sanitizeDeviceInfo = (info: any) => {
 
 export const parseTextInfo = (text: string) => {
 	const lines = text.split("\n");
-	const result: Record<string, string> = {};
+	const result: Record<string, string> = Object.create(null);
 	for (const line of lines) {
 		if (line.trim() === "") continue;
 		// Match Key: Value separated by a large space from logo
@@ -238,7 +238,7 @@ const formatFastfetchResult = (
 
 export const normalizeJSON = (parsed: any): Record<string, string> => {
 	if (Array.isArray(parsed)) {
-		const result: Record<string, string> = {};
+		const result: Record<string, string> = Object.create(null);
 		for (const item of parsed) {
 			if (!item.type) continue;
 			if (item.error) continue; // Fastfetch natively skips printing modules that threw errors

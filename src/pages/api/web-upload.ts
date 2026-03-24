@@ -9,7 +9,12 @@ import {
 export const POST: APIRoute = async ({ request, locals, redirect }) => {
 	const formData = await request.formData();
 	const isPublic = formData.get("is_public") === "1";
-	const deviceInfoStr = formData.get("device_info") as string;
+	const deviceInfoStrRaw = formData.get("device_info");
+	if (typeof deviceInfoStrRaw !== "string") {
+		return new Response("Invalid formulation.", { status: 400 });
+	}
+
+	const deviceInfoStr = deviceInfoStrRaw.slice(0, 100000);
 
 	const user = locals.user;
 	if (!user) {
@@ -41,6 +46,19 @@ export const POST: APIRoute = async ({ request, locals, redirect }) => {
 		return new Response(
 			'Invalid device metadata: Could not parse fastfetch JSON. Please ensure you are pasting valid full JSON output from "fastfetch --format json".',
 			{ status: 400 },
+		);
+	}
+
+	const countRes = await env.DB.prepare(
+		"SELECT COUNT(*) as count FROM devices WHERE username = ?",
+	)
+		.bind(username)
+		.first();
+	const count = Number((countRes as any)?.count) || 0;
+	if (count >= 50) {
+		return new Response(
+			"You have reached the maximum limit of 50 devices. Please delete some before uploading more.",
+			{ status: 403 },
 		);
 	}
 

@@ -36,11 +36,26 @@ export const POST: APIRoute = async ({ request }) => {
 		);
 	}
 
+	const rawText = await request.text();
+	if (rawText.length > 100000) {
+		return new Response(
+			JSON.stringify({ error: "Payload too large. Max 100KB." }),
+			{ status: 413, headers: { "Content-Type": "application/json" } },
+		);
+	}
+
 	let deviceInfoRaw: any;
 	if (contentType.includes("application/json")) {
-		deviceInfoRaw = await request.json();
+		try {
+			deviceInfoRaw = JSON.parse(rawText);
+		} catch {
+			return new Response(JSON.stringify({ error: "Invalid JSON format." }), {
+				status: 400,
+				headers: { "Content-Type": "application/json" },
+			});
+		}
 	} else {
-		deviceInfoRaw = await request.text();
+		deviceInfoRaw = rawText;
 	}
 
 	let deviceInfo: any;
@@ -85,6 +100,22 @@ export const POST: APIRoute = async ({ request }) => {
 		"is_public" in deviceInfoRaw
 	) {
 		isPublic = deviceInfoRaw.is_public ? 1 : 0;
+	}
+
+	const countRes = await env.DB.prepare(
+		"SELECT COUNT(*) as count FROM devices WHERE username = ?",
+	)
+		.bind(finalUsername)
+		.first();
+	const count = Number((countRes as any)?.count) || 0;
+	if (count >= 50) {
+		return new Response(
+			JSON.stringify({
+				error:
+					"You have reached the maximum limit of 50 devices. Please delete some before uploading more.",
+			}),
+			{ status: 403, headers: { "Content-Type": "application/json" } },
+		);
 	}
 
 	await env.DB.prepare(
