@@ -70,11 +70,18 @@ export const POST: APIRoute = async ({ request }) => {
 	} else if (Array.isArray(deviceInfoRaw)) {
 		rawObj = deviceInfoRaw;
 		deviceInfo = normalizeJSON(rawObj);
-	} else {
+	} else if (deviceInfoRaw && typeof deviceInfoRaw === "object") {
 		const { username: _u, is_public, ...rest } = deviceInfoRaw;
 		rawObj = Object.keys(rest).length ? rest : deviceInfoRaw;
 		deviceInfo = normalizeJSON(rawObj);
 		deviceInfoRaw = { is_public, ...rest };
+	} else {
+		return new Response(
+			JSON.stringify({
+				error: "Invalid payload shape. Expected JSON object, array, or string.",
+			}),
+			{ status: 400, headers: { "Content-Type": "application/json" } },
+		);
 	}
 
 	const sanitized = sanitizeDeviceInfo(deviceInfo);
