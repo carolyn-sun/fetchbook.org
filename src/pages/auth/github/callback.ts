@@ -5,31 +5,38 @@ import { typedEnv as env } from "../../../utils/env";
 export const GET: APIRoute = async ({ url, redirect, cookies }) => {
 	const code = url.searchParams.get("code");
 	if (!code) return new Response("Missing code parameter", { status: 400 });
-
-	const tokenRes = await fetch("https://github.com/login/oauth/access_token", {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			Accept: "application/json",
-		},
-		body: JSON.stringify({
-			client_id: env.GITHUB_CLIENT_ID,
-			client_secret: env.GITHUB_CLIENT_SECRET,
-			code,
-		}),
-	});
+	let tokenRes: Response;
+	try {
+		tokenRes = await fetch("https://github.com/login/oauth/access_token", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+			},
+			body: JSON.stringify({
+				client_id: env.GITHUB_CLIENT_ID,
+				client_secret: env.GITHUB_CLIENT_SECRET,
+				code,
+			}),
+		});
+	} catch {
+		// Network or connectivity error when contacting GitHub
+		return new Response("Failed to contact GitHub OAuth endpoint", {
+			status: 502,
+		});
+	}
 
 	// Handle non-2xx responses and potential non-JSON bodies from GitHub
 	if (!tokenRes.ok) {
-		// Try to read response body as text (may be HTML or plain text)
+		// Try to read and discard response body (may be HTML or plain text)
 		try {
 			await tokenRes.text();
 		} catch {
 			// Ignore body read errors; we'll return a generic message
 		}
 
-		return new Response("Failed to get access token from GitHub", {
-			status: 502,
+		return new Response("GitHub OAuth token exchange failed. Please restart the login flow.", {
+			status: 400,
 		});
 	}
 
