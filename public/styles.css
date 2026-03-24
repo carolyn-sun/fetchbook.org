@@ -76,12 +76,31 @@ pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 4px; 
   gap: 10px;
   align-items: center;
 }
+
+.share-link-box {
+  margin: 0;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  color: #666;
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-all;
+  width: fit-content;
+  max-width: 100%;
+}
+
 @media (max-width: 600px) {
   .header-user-block {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
     margin-top: 4px;
+  }
+  .share-link-box {
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 

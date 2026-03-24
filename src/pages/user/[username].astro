@@ -53,21 +53,11 @@ const origin = Astro.url.origin;
 	<Layout title={`${username}'s fetchbook`}>
 		<h2>{username}'s fetchbook</h2>
 
-		<div style="margin-bottom: 2rem; display: flex; align-items: stretch;">
-			<div
-				id="share-link"
-				class="share-link-box"
-				style="margin: 0; background: #f9f9f9; border: 1px solid #ddd; color: #666; width: 100%; max-width: 500px; font-size: 0.85rem; padding: 6px 12px; border-radius: 4px; white-space: pre-wrap; word-break: break-all; display: flex; align-items: center;"
-			>{`${origin.replace(/^https?:\/\//, '')}/user/${username}`}</div>
-		</div>
-
-		{hasOtherUsers && (
-			<div style="margin-bottom: 2rem; display: flex; justify-content: center; align-items: center;">
-				<a href={`/random?exclude=${username}`} class="primary-btn">
-					Explore a random fetchbook ✨
-				</a>
+		<div style="margin-bottom: 2rem; display: flex;">
+			<div id="share-link" class="share-link-box">
+				{`${origin.replace(/^https?:\/\//, '')}/user/${username}`}
 			</div>
-		)}
+		</div>
 		
 		{results.length === 0 ? (
 			<p>No devices found or they are private.</p>
