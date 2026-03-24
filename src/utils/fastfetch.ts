@@ -1,6 +1,67 @@
-// Helper to sanitize MAC/IP (disabled)
-export const sanitizeDeviceInfo = (info: any) => {
-	return info;
+// Helper to sanitize MAC/IP and related sensitive fields
+export const sanitizeDeviceInfo = (info: any): any => {
+	// Case-insensitive set of keys whose values should not be uploaded verbatim.
+	// At minimum include local IP fields; extend with other obviously sensitive keys.
+	const SENSITIVE_KEYS = new Set<string>([
+		"localip",
+		"local ip",
+		"ip",
+		"ip address",
+		"mac",
+		"mac address",
+	]);
+
+	const ipv4Regex = /\b(?:\d{1,3}\.){3}\d{1,3}\b/g;
+	// Simple IPv6 matcher; not fully strict but good enough for redaction.
+	const ipv6Regex = /\b(?:[0-9A-Fa-f]{0,4}:){2,7}[0-9A-Fa-f]{0,4}\b/g;
+	const macRegex = /\b(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}\b/g;
+
+	const redactString = (value: string): string => {
+		let redacted = value;
+		redacted = redacted.replace(ipv4Regex, "[REDACTED_IP]");
+		redacted = redacted.replace(ipv6Regex, "[REDACTED_IP]");
+		redacted = redacted.replace(macRegex, "[REDACTED_MAC]");
+		return redacted;
+	};
+
+	const sanitize = (value: any, parentKey?: string): any => {
+		if (value === null || value === undefined) {
+			return value;
+		}
+
+		// If this value is under a sensitive key, drop it entirely.
+		if (parentKey) {
+			const keyLower = parentKey.toLowerCase();
+			if (SENSITIVE_KEYS.has(keyLower)) {
+				return undefined;
+			}
+		}
+
+		const t = typeof value;
+		if (t === "string") {
+			return redactString(value);
+		}
+		if (t !== "object") {
+			return value;
+		}
+
+		if (Array.isArray(value)) {
+			return value
+				.map((item) => sanitize(item))
+				.filter((item) => item !== undefined);
+		}
+
+		const result: any = {};
+		for (const key of Object.keys(value)) {
+			const sanitized = sanitize(value[key], key);
+			if (sanitized !== undefined) {
+				result[key] = sanitized;
+			}
+		}
+		return result;
+	};
+
+	return sanitize(info);
 };
 
 export const parseTextInfo = (text: string) => {
