@@ -125,14 +125,22 @@ export const POST: APIRoute = async ({ request }) => {
 		);
 	}
 
+	const maxSortRes = await env.DB.prepare(
+		"SELECT MAX(sort_order) as maxSort FROM devices WHERE username = ?",
+	)
+		.bind(finalUsername)
+		.first();
+	const newSortOrder = (Number((maxSortRes as any)?.maxSort) || 0) + 1;
+
 	await env.DB.prepare(
-		"INSERT INTO devices (username, device_info, raw_device_info, is_public) VALUES (?, ?, ?, ?)",
+		"INSERT INTO devices (username, device_info, raw_device_info, is_public, sort_order) VALUES (?, ?, ?, ?, ?)",
 	)
 		.bind(
 			finalUsername,
 			JSON.stringify(sanitized),
 			sanitizedRaw ? JSON.stringify(sanitizedRaw) : null,
 			isPublic,
+			newSortOrder,
 		)
 		.run();
 
