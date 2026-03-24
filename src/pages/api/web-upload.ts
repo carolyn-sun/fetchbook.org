@@ -17,7 +17,12 @@ export const POST: APIRoute = async ({ request, locals, redirect }) => {
 		);
 	}
 
-	const deviceInfoStr = deviceInfoStrRaw.slice(0, 100000);
+	if (deviceInfoStrRaw.length > 100000) {
+		return new Response("Payload too large: 'device_info' exceeds 100KB.", {
+			status: 413,
+		});
+	}
+	const deviceInfoStr = deviceInfoStrRaw;
 
 	const user = locals.user;
 	if (!user) {
