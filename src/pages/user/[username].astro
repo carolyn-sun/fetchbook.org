@@ -37,7 +37,7 @@ if (!isOwner && results.length === 0) {
 	Astro.response.status = 404;
 }
 
-const origin = Astro.url.origin;
+
 ---
 
 {!isOwner && results.length === 0 ? (
@@ -53,11 +53,7 @@ const origin = Astro.url.origin;
 	<Layout title={`${username}'s fetchbook`}>
 		<h2>{username}'s fetchbook</h2>
 
-		<div style="margin-bottom: 2rem; display: flex;">
-			<div id="share-link" class="share-link-box">
-				{`${origin.replace(/^https?:\/\//, '')}/user/${username}`}
-			</div>
-		</div>
+
 		
 		{results.length === 0 ? (
 			<p>No devices found or they are private.</p>
