@@ -99,15 +99,15 @@ describe("fastfetch Utilities", () => {
         $$P      d$'     ,    $$P     Shell: zsh 5.9
         $$:      $$.   -    ,d$$'     Memory: 8.00 GiB / 16.00 GiB
 `;
-			delete (Object.prototype as any)["invalid_prop"]; // ensure pure state
+			delete (Object.prototype as any).invalid_prop; // ensure pure state
 			const parsed = parseTextInfo(rawText);
 
 			// Checks basic parsed fields and verifies Object.create(null) dictionary
-			expect(parsed["OS"]).toBe("macOS Tahoe");
-			expect(parsed["Host"]).toBe("Mac Mini");
-			expect(parsed["Kernel"]).toBe("Darwin 25.3.0");
-			expect(parsed["Shell"]).toBe("zsh 5.9");
-			expect(parsed["Memory"]).toBe("8.00 GiB / 16.00 GiB");
+			expect(parsed.OS).toBe("macOS Tahoe");
+			expect(parsed.Host).toBe("Mac Mini");
+			expect(parsed.Kernel).toBe("Darwin 25.3.0");
+			expect(parsed.Shell).toBe("zsh 5.9");
+			expect(parsed.Memory).toBe("8.00 GiB / 16.00 GiB");
 
 			// Special User@Host detection logic via parser fallback
 			expect(parsed["User@Host"]).toBe("carolyn@mac");
@@ -123,7 +123,7 @@ describe("fastfetch Utilities", () => {
 			OS: Linux    
 			`;
 			const parsed = parseTextInfo(garbage);
-			expect(parsed["OS"]).toBe("Linux");
+			expect(parsed.OS).toBe("Linux");
 			expect(Object.keys(parsed).length).toBe(1);
 			expect(Object.getPrototypeOf(parsed)).toBeNull();
 		});
@@ -194,14 +194,14 @@ describe("fastfetch Utilities", () => {
 
 			// Resolves mappings
 			expect(norm["User@Host"]).toBe("carolyn@mac");
-			expect(norm["OS"]).toBe("macOS Tahoe 26.3.1");
-			expect(norm["OS_ID"]).toBe("macos");
+			expect(norm.OS).toBe("macOS Tahoe 26.3.1");
+			expect(norm.OS_ID).toBe("macos");
 
 			// Ignores error throws natively
-			expect(norm["ErrorType"]).toBeUndefined();
+			expect(norm.ErrorType).toBeUndefined();
 
 			// Ignores internal LocalIp as it filters it proactively mapping inside the routine
-			expect(norm["LocalIp"]).toBeUndefined();
+			expect(norm.LocalIp).toBeUndefined();
 
 			// Checks object is null prototype resistant
 			expect(Object.getPrototypeOf(norm)).toBeNull();
@@ -218,11 +218,11 @@ describe("fastfetch Utilities", () => {
 
 			// Should have successfully extracted identity
 			expect(sanitized["User@Host"]).toBe("carolyn@mac-m4pro-metal.local");
-			expect(sanitized["OS"]).toBe("macOS Tahoe 26.3.1 (25D2128)");
-			expect(sanitized["Host"]).toBe("Mac Mini (2024)");
+			expect(sanitized.OS).toBe("macOS Tahoe 26.3.1 (25D2128)");
+			expect(sanitized.Host).toBe("Mac Mini (2024)");
 
 			// Privacy Filters Must Pass E2E
-			expect(sanitized["LocalIp"]).toBeUndefined();
+			expect(sanitized.LocalIp).toBeUndefined();
 
 			// Checks that standard objects lengths remain roughly valid
 			expect(Object.keys(sanitized).length).toBeGreaterThan(15);
@@ -244,11 +244,11 @@ describe("fastfetch Utilities", () => {
 			const sanitized = sanitizeDeviceInfo(normalized);
 
 			expect(sanitized["User@Host"]).toBeTruthy();
-			expect(sanitized["OS"]).toMatch(/Windows/i);
-			expect(sanitized["Host"]).toBeTruthy();
+			expect(sanitized.OS).toMatch(/Windows/i);
+			expect(sanitized.Host).toBeTruthy();
 
 			// Sensitive data stripping
-			expect(sanitized["LocalIp"]).toBeUndefined();
+			expect(sanitized.LocalIp).toBeUndefined();
 
 			expect(Object.keys(sanitized).length).toBeGreaterThan(15);
 			expect(Object.getPrototypeOf(sanitized)).toBeNull();
