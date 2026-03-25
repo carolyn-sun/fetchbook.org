@@ -136,25 +136,34 @@ function generateLogos() {
 	const outTS = `// AUTO GENERATED. DO NOT EDIT.
 export const LOGOS: Record<string, string> = ${JSON.stringify(resultData, null, 2)};
 
-export const getLogoForOS = (os?: string) => {
-  if (!os) return LOGOS.debian || '';
-  const lower = os.toLowerCase();
-  
-  if (LOGOS[lower]) return LOGOS[lower];
+export const getLogoForOS = (...osList: (string | undefined)[]) => {
+  const names = osList.filter(Boolean) as string[];
+  if (names.length === 0) return LOGOS.debian || '';
   
   const sortedKeys = Object.keys(LOGOS).sort((a, b) => b.length - a.length);
 
-  // Exact word boundary match first
-  for (const key of sortedKeys) {
-    if (new RegExp(\`\\\\b\${key.replace(/[-\\\\/\\\\^$*+?.()|[\\\\]{}]/g, '\\\\$&')}\\\\b\`).test(lower)) {
-      return LOGOS[key];
+  for (const os of names) {
+    const lower = os.toLowerCase();
+    
+    // Exact match
+    if (LOGOS[lower]) return LOGOS[lower];
+
+    // Exact word boundary match
+    for (const key of sortedKeys) {
+      if (new RegExp(\`\\\\b\${key.replace(/[-\\\\/\\\\^$*+?.()|[\\\\]{}]/g, '\\\\$&')}\\\\b\`).test(lower)) {
+        return LOGOS[key];
+      }
     }
   }
 
   // Fuzzy fallback
-  for (const key of sortedKeys) {
-    if (lower.includes(key)) return LOGOS[key];
+  for (const os of names) {
+    const lower = os.toLowerCase();
+    for (const key of sortedKeys) {
+      if (lower.includes(key)) return LOGOS[key];
+    }
   }
+
   return LOGOS.debian || '';
 };
 `;

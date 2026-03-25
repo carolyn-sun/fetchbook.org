@@ -16,7 +16,13 @@ const keys = Object.keys(info);
 		<pre
 			class="hide-on-mobile terminal-logo-box"
 			set:html={getLogoForOS(
-				info.OS_ID || info.OS_ID_LIKE || info.OS || info.os || info.Os,
+				info.DE,
+				info.Host,
+				info.OS_ID,
+				info.OS_ID_LIKE,
+				info.OS,
+				info.os,
+				info.Os,
 			)}
 		></pre>
 		<div class="terminal-details">

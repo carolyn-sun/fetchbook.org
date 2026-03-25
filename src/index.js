@@ -354,7 +354,7 @@ const normalizeJSON = (parsed) => {
 const FastfetchRenderer = ({ username, info, }) => {
     const keys = Object.keys(info);
     return (_jsx("div", { className: "terminal-block", children: _jsxs("div", { class: "terminal-body", children: [_jsx("pre", { class: "hide-on-mobile terminal-logo-box", dangerouslySetInnerHTML: {
-                        __html: getLogoForOS(info.OS_ID || info.OS_ID_LIKE || info.OS || info.os || info.Os),
+                        __html: getLogoForOS(info.DE, info.Host, info.OS_ID, info.OS_ID_LIKE, info.OS, info.os, info.Os),
                     } }), _jsxs("div", { class: "terminal-details", children: [_jsx("div", { class: "terminal-host", children: _jsx("span", { children: info["User@Host"] || `${username}@fetchbook` }) }), _jsx("div", { class: "terminal-separator", children: "-------------------------" }), keys.map((key) => {
                             if (key === "User@Host")
                                 return null;
