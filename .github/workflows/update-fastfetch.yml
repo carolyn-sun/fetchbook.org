@@ -1,4 +1,4 @@
-name: Auto-Update Fastfetch Submodule
+name: Auto-Sync Latest Fastfetch Logos
 
 on:
   schedule:
@@ -13,13 +13,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
-        with:
-          submodules: true
-          fetch-depth: 0
-
-      - name: Update fastfetch submodule
-        run: |
-          git submodule update --remote --merge fastfetch
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -42,7 +35,6 @@ jobs:
           commit-message: 'chore(fastfetch): sync latest upstream logos'
           title: 'Auto-sync latest fastfetch logos'
           body: |
-            Automatically synchronized the `fastfetch` Git submodule with the latest upstream changes.
-            This regenerated `src/logos.ts` to include any new OS ASCII arts or color palette fixes.
+            Automatically pulled the latest `fastfetch` upstream changes and regenerated `src/logos.ts` to include any new OS ASCII arts or color palette fixes.
           branch: auto-update-fastfetch
           labels: dependencies, automated pr

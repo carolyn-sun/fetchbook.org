@@ -1,14 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execSync } from "node:child_process";
 
-const LOGO_DIR = path.join(process.cwd(), "fastfetch", "src", "logo", "ascii");
-const BUILTIN_C_PATH = path.join(
-	process.cwd(),
-	"fastfetch",
-	"src",
-	"logo",
-	"builtin.c",
-);
+const TARGET_DIR = path.join(process.cwd(), ".fastfetch");
+const LOGO_DIR = path.join(TARGET_DIR, "src", "logo", "ascii");
+const BUILTIN_C_PATH = path.join(TARGET_DIR, "src", "logo", "builtin.c");
 const OUT_FILE = path.join(process.cwd(), "src", "logos.ts");
 
 const COLOR_MAP = {
@@ -32,9 +28,17 @@ const COLOR_MAP = {
 };
 
 function generateLogos() {
+	if (!fs.existsSync(TARGET_DIR)) {
+		console.log("Cloning fastfetch...");
+		execSync("git clone --depth 1 https://github.com/fastfetch-cli/fastfetch.git " + TARGET_DIR, { stdio: "inherit" });
+	} else {
+		console.log("Pulling latest fastfetch...");
+		execSync("git -C " + TARGET_DIR + " pull", { stdio: "inherit" });
+	}
+
 	if (!fs.existsSync(LOGO_DIR)) {
 		console.error(
-			"Fastfetch submodule not initialized or empty. Run git submodule update --init",
+			"Failed to clone fastfetch repository",
 		);
 		process.exit(1);
 	}
