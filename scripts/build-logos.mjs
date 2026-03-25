@@ -1,7 +1,6 @@
 import { execSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
 
 const TARGET_DIR = path.join(process.cwd(), ".fastfetch");
 const LOGO_DIR = path.join(TARGET_DIR, "src", "logo", "ascii");
@@ -31,16 +30,17 @@ const COLOR_MAP = {
 function generateLogos() {
 	if (!fs.existsSync(TARGET_DIR)) {
 		console.log("Cloning fastfetch...");
-		execSync("git clone --depth 1 https://github.com/fastfetch-cli/fastfetch.git " + TARGET_DIR, { stdio: "inherit" });
+		execSync(
+			`git clone --depth 1 https://github.com/fastfetch-cli/fastfetch.git ${TARGET_DIR}`,
+			{ stdio: "inherit" },
+		);
 	} else {
 		console.log("Pulling latest fastfetch...");
-		execSync("git -C " + TARGET_DIR + " pull", { stdio: "inherit" });
+		execSync(`git -C ${TARGET_DIR} pull`, { stdio: "inherit" });
 	}
 
 	if (!fs.existsSync(LOGO_DIR)) {
-		console.error(
-			"Failed to clone fastfetch repository",
-		);
+		console.error("Failed to clone fastfetch repository");
 		process.exit(1);
 	}
 
