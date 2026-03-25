@@ -10,8 +10,10 @@ const user = Astro.locals.user;
 
 let totalDevicesCount = 0;
 try {
-	const countRes = await env.DB.prepare("SELECT COUNT(*) as count FROM devices").first();
-	totalDevicesCount = Number((countRes as any)?.count) || 0;
+  const countRes = await env.DB.prepare(
+    "SELECT COUNT(*) as count FROM devices",
+  ).first();
+  totalDevicesCount = Number((countRes as any)?.count) || 0;
 } catch (e) {}
 ---
 
@@ -81,7 +83,7 @@ try {
                     href="/privacy"
                     style={{ color: "#666", textDecoration: "underline" }}
                   >
-                    my privacy
+                    privacy
                   </a>
                 </span>
                 <span>
@@ -96,10 +98,16 @@ try {
               </span>
             ) : (
               <span class="header-user-block">
-                <a href="/privacy" style={{ color: "#666", textDecoration: "underline" }}>
+                <a
+                  href="/privacy"
+                  style={{ color: "#666", textDecoration: "underline" }}
+                >
                   Privacy
                 </a>
-                <a href="/auth/github/login" style={{ color: "#666", textDecoration: "underline" }}>
+                <a
+                  href="/auth/github/login"
+                  style={{ color: "#666", textDecoration: "underline" }}
+                >
                   Login with GitHub
                 </a>
               </span>
@@ -118,7 +126,9 @@ try {
           textAlign: "center",
         }}
       >
-        <span style="font-weight: bold; color: #666;">{totalDevicesCount.toLocaleString()}</span> upload{totalDevicesCount === 1 ? "" : "s"} · fetchbook.org ·{" "}
+        <span style="font-weight: bold; color: #666;"
+          >{totalDevicesCount.toLocaleString()}</span
+        > upload{totalDevicesCount === 1 ? "" : "s"} · fetchbook.org ·{" "}
         <a
           href="https://github.com/carolyn-sun/fetchbook.org"
           target="_blank"
