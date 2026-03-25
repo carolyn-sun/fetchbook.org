@@ -1254,6 +1254,25 @@ export const LOGOS: Record<string, string> = {
 		'<span style="color: #81a1c1">       __________</span>\n<span style="color: #81a1c1">     / __________ \\</span>\n<span style="color: #81a1c1">   / /             \\ \\</span>\n<span style="color: #81a1c1"> / /   .-"````"-.   \\ \\</span>\n<span style="color: #81a1c1">| | |/            \\| | |</span>\n<span style="color: #81a1c1">| |    Z R A X Y L   | |</span>\n<span style="color: #81a1c1">| | \\ ¯¯¯¯¯¯¯¯¯¯¯¯ / | |</span>\n<span style="color: #81a1c1"> \\ \\ `-.___..___.-\' / /</span>\n<span style="color: #81a1c1">  \'.\'._         _.\' .\'</span>\n<span style="color: #81a1c1">    \'-.| M - C | .-\'</span>',
 };
 
+const ANDROID_ALIASES = [
+	"hyperos",
+	"miui",
+	"coloros",
+	"originos",
+	"oxygenos",
+	"flyme",
+	"magicos",
+	"zui",
+	"realme",
+	"emui",
+	"oneui",
+	"lineageos",
+	"cyngn",
+	"cyanogen",
+	"funouch",
+	"funtouch",
+];
+
 export const getLogoForOS = (...osList: (string | undefined)[]) => {
 	const names = osList.filter(Boolean) as string[];
 	if (names.length === 0) return LOGOS.debian || "";
@@ -1275,6 +1294,11 @@ export const getLogoForOS = (...osList: (string | undefined)[]) => {
 			) {
 				return LOGOS[key];
 			}
+		}
+
+		// Android variants fallback
+		for (const alias of ANDROID_ALIASES) {
+			if (lower.includes(alias)) return LOGOS.android || "";
 		}
 	}
 

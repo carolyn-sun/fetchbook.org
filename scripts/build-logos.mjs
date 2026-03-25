@@ -136,6 +136,12 @@ function generateLogos() {
 	const outTS = `// AUTO GENERATED. DO NOT EDIT.
 export const LOGOS: Record<string, string> = ${JSON.stringify(resultData, null, 2)};
 
+const ANDROID_ALIASES = [
+  "hyperos", "miui", "coloros", "originos", "oxygenos", "flyme", 
+  "magicos", "zui", "realme", "emui", "oneui", "lineageos", "cyngn", 
+  "cyanogen", "funouch", "funtouch"
+];
+
 export const getLogoForOS = (...osList: (string | undefined)[]) => {
   const names = osList.filter(Boolean) as string[];
   if (names.length === 0) return LOGOS.debian || '';
@@ -153,6 +159,11 @@ export const getLogoForOS = (...osList: (string | undefined)[]) => {
       if (new RegExp(\`\\\\b\${key.replace(/[-\\\\/\\\\^$*+?.()|[\\\\]{}]/g, '\\\\$&')}\\\\b\`).test(lower)) {
         return LOGOS[key];
       }
+    }
+    
+    // Android variants fallback
+    for (const alias of ANDROID_ALIASES) {
+      if (lower.includes(alias)) return LOGOS.android || '';
     }
   }
 
