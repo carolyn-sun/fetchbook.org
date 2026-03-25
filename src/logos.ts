@@ -1254,28 +1254,61 @@ export const LOGOS: Record<string, string> = {
 		'<span style="color: #81a1c1">       __________</span>\n<span style="color: #81a1c1">     / __________ \\</span>\n<span style="color: #81a1c1">   / /             \\ \\</span>\n<span style="color: #81a1c1"> / /   .-"````"-.   \\ \\</span>\n<span style="color: #81a1c1">| | |/            \\| | |</span>\n<span style="color: #81a1c1">| |    Z R A X Y L   | |</span>\n<span style="color: #81a1c1">| | \\ ¯¯¯¯¯¯¯¯¯¯¯¯ / | |</span>\n<span style="color: #81a1c1"> \\ \\ `-.___..___.-\' / /</span>\n<span style="color: #81a1c1">  \'.\'._         _.\' .\'</span>\n<span style="color: #81a1c1">    \'-.| M - C | .-\'</span>',
 };
 
-export const getLogoForOS = (os?: string) => {
-	if (!os) return LOGOS.debian || "";
-	const lower = os.toLowerCase();
+const ANDROID_ALIASES = [
+	"hyperos",
+	"miui",
+	"coloros",
+	"originos",
+	"oxygenos",
+	"flyme",
+	"magicos",
+	"zui",
+	"realme",
+	"emui",
+	"oneui",
+	"lineageos",
+	"cyngn",
+	"cyanogen",
+	"funouch",
+	"funtouch",
+];
 
-	if (LOGOS[lower]) return LOGOS[lower];
+export const getLogoForOS = (...osList: (string | undefined)[]) => {
+	const names = osList.filter(Boolean) as string[];
+	if (names.length === 0) return LOGOS.debian || "";
 
 	const sortedKeys = Object.keys(LOGOS).sort((a, b) => b.length - a.length);
 
-	// Exact word boundary match first
-	for (const key of sortedKeys) {
-		if (
-			new RegExp(
-				`\\b${key.replace(/[-\\/\\^$*+?.()|[\\]{}]/g, "\\$&")}\\b`,
-			).test(lower)
-		) {
-			return LOGOS[key];
+	for (const os of names) {
+		const lower = os.toLowerCase();
+
+		// Exact match
+		if (LOGOS[lower]) return LOGOS[lower];
+
+		// Exact word boundary match
+		for (const key of sortedKeys) {
+			if (
+				new RegExp(
+					`\\b${key.replace(/[-\\/\\^$*+?.()|[\\]{}]/g, "\\$&")}\\b`,
+				).test(lower)
+			) {
+				return LOGOS[key];
+			}
+		}
+
+		// Android variants fallback
+		for (const alias of ANDROID_ALIASES) {
+			if (lower.includes(alias)) return LOGOS.android || "";
 		}
 	}
 
 	// Fuzzy fallback
-	for (const key of sortedKeys) {
-		if (lower.includes(key)) return LOGOS[key];
+	for (const os of names) {
+		const lower = os.toLowerCase();
+		for (const key of sortedKeys) {
+			if (lower.includes(key)) return LOGOS[key];
+		}
 	}
+
 	return LOGOS.debian || "";
 };

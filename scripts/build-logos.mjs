@@ -1,14 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
+import { execSync } from "node:child_process";
 
-const LOGO_DIR = path.join(process.cwd(), "fastfetch", "src", "logo", "ascii");
-const BUILTIN_C_PATH = path.join(
-	process.cwd(),
-	"fastfetch",
-	"src",
-	"logo",
-	"builtin.c",
-);
+const TARGET_DIR = path.join(process.cwd(), ".fastfetch");
+const LOGO_DIR = path.join(TARGET_DIR, "src", "logo", "ascii");
+const BUILTIN_C_PATH = path.join(TARGET_DIR, "src", "logo", "builtin.c");
 const OUT_FILE = path.join(process.cwd(), "src", "logos.ts");
 
 const COLOR_MAP = {
@@ -32,9 +28,17 @@ const COLOR_MAP = {
 };
 
 function generateLogos() {
+	if (!fs.existsSync(TARGET_DIR)) {
+		console.log("Cloning fastfetch...");
+		execSync("git clone --depth 1 https://github.com/fastfetch-cli/fastfetch.git " + TARGET_DIR, { stdio: "inherit" });
+	} else {
+		console.log("Pulling latest fastfetch...");
+		execSync("git -C " + TARGET_DIR + " pull", { stdio: "inherit" });
+	}
+
 	if (!fs.existsSync(LOGO_DIR)) {
 		console.error(
-			"Fastfetch submodule not initialized or empty. Run git submodule update --init",
+			"Failed to clone fastfetch repository",
 		);
 		process.exit(1);
 	}
@@ -132,25 +136,45 @@ function generateLogos() {
 	const outTS = `// AUTO GENERATED. DO NOT EDIT.
 export const LOGOS: Record<string, string> = ${JSON.stringify(resultData, null, 2)};
 
-export const getLogoForOS = (os?: string) => {
-  if (!os) return LOGOS.debian || '';
-  const lower = os.toLowerCase();
-  
-  if (LOGOS[lower]) return LOGOS[lower];
+const ANDROID_ALIASES = [
+  "hyperos", "miui", "coloros", "originos", "oxygenos", "flyme", 
+  "magicos", "zui", "realme", "emui", "oneui", "lineageos", "cyngn", 
+  "cyanogen", "funouch", "funtouch"
+];
+
+export const getLogoForOS = (...osList: (string | undefined)[]) => {
+  const names = osList.filter(Boolean) as string[];
+  if (names.length === 0) return LOGOS.debian || '';
   
   const sortedKeys = Object.keys(LOGOS).sort((a, b) => b.length - a.length);
 
-  // Exact word boundary match first
-  for (const key of sortedKeys) {
-    if (new RegExp(\`\\\\b\${key.replace(/[-\\\\/\\\\^$*+?.()|[\\\\]{}]/g, '\\\\$&')}\\\\b\`).test(lower)) {
-      return LOGOS[key];
+  for (const os of names) {
+    const lower = os.toLowerCase();
+    
+    // Exact match
+    if (LOGOS[lower]) return LOGOS[lower];
+
+    // Exact word boundary match
+    for (const key of sortedKeys) {
+      if (new RegExp(\`\\\\b\${key.replace(/[-\\\\/\\\\^$*+?.()|[\\\\]{}]/g, '\\\\$&')}\\\\b\`).test(lower)) {
+        return LOGOS[key];
+      }
+    }
+    
+    // Android variants fallback
+    for (const alias of ANDROID_ALIASES) {
+      if (lower.includes(alias)) return LOGOS.android || '';
     }
   }
 
   // Fuzzy fallback
-  for (const key of sortedKeys) {
-    if (lower.includes(key)) return LOGOS[key];
+  for (const os of names) {
+    const lower = os.toLowerCase();
+    for (const key of sortedKeys) {
+      if (lower.includes(key)) return LOGOS[key];
+    }
   }
+
   return LOGOS.debian || '';
 };
 `;
