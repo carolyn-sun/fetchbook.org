@@ -1,3 +1,0 @@
-[submodule "fastfetch"]
-	path = fastfetch
-	url = https://github.com/fastfetch-cli/fastfetch.git
