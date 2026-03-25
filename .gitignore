@@ -17,4 +17,5 @@ text.json
 # Astro
 dist/
 .astro/
-.fastfetchsrc/logos.ts
+.fastfetch/
+src/logos.ts
