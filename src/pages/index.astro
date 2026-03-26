@@ -130,12 +130,12 @@ if (user) {
 								</code>
 							</li>
 							<li>
-								Run in terminal:{" "}
+								Run in terminal (CMD / PowerShell):{" "}
 								<code style="background: #f1f3f5; padding: 2px 4px; border-radius: 3px;">
-									fastfetch --format json
+									cmd /c "fastfetch --format json &gt; %TEMP%\temp.json &amp; notepad %TEMP%\temp.json"
 								</code>
 							</li>
-							<li>Copy the output to the textfield below.</li>
+							<li>Copy the complete contents to the textfield below.</li>
 						</ol>
 					</div>
 				</div>
